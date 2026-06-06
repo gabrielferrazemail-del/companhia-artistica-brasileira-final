@@ -1,0 +1,62 @@
+---
+layout: base.njk
+title: "Contatos e redes sociais"
+permalink: /painel/contatos/index.html
+---
+<section class="painel-page editor-page" id="contatos">
+  <header class="page-header">
+    <p class="kicker">Administração</p>
+    <h1 class="page-title">Contatos e redes sociais</h1>
+    <p class="page-sub" id="ct-sub">Carregando…</p>
+  </header>
+
+  <div id="ct-guest" hidden>
+    <p>Você precisa entrar como administração.</p>
+    <button class="btn-primary" type="button" data-login>Entrar</button>
+  </div>
+  <div id="ct-noadmin" hidden>
+    <p>Esta área é restrita à administração do coletivo.</p>
+    <a class="btn-ghost" href="/">Voltar ao site</a>
+  </div>
+  <div id="ct-error" hidden><p id="ct-error-msg">Não foi possível carregar.</p></div>
+
+  <form id="contatos-form" hidden novalidate>
+    <p class="editor-help">
+      Aqui você muda como o coletivo é contatado. Estes dados aparecem na página
+      <strong>Contato</strong> e no rodapé do site. Deixe um campo vazio para ele não aparecer.
+    </p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="ct-email">E-mail de contato</label>
+        <input id="ct-email" type="email" placeholder="ex.: contato@seudominio.com.br">
+      </div>
+      <div class="field">
+        <label for="ct-whatsapp">WhatsApp</label>
+        <input id="ct-whatsapp" type="text" placeholder="só números com DDI, ex.: 5511999999999">
+        <p class="field-hint">Use o formato internacional (55 + DDD + número), sem espaços nem símbolos.</p>
+      </div>
+    </div>
+
+    <fieldset class="field">
+      <legend>Redes sociais</legend>
+      <div id="ct-social"></div>
+      <button type="button" class="btn-ghost btn-sm" id="ct-add-social">+ Adicionar rede</button>
+      <p class="field-hint">Ex.: plataforma "Instagram" e o link completo (https://instagram.com/seu_perfil).</p>
+    </fieldset>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit" id="ct-save">Salvar contatos</button>
+      <a class="btn-ghost" href="/painel/">Cancelar</a>
+      <span id="ct-status" class="save-status" role="status"></span>
+    </div>
+  </form>
+</section>
+
+<template id="tpl-social">
+  <div class="link-row">
+    <input type="text" class="so-platform" placeholder="Plataforma (ex.: Instagram)">
+    <input type="url" class="so-url" placeholder="https://…">
+    <button type="button" class="btn-ghost btn-sm so-remove" aria-label="Remover">×</button>
+  </div>
+</template>

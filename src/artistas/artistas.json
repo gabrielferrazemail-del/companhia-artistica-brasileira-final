@@ -1,0 +1,5 @@
+{
+  "layout": "artista.njk",
+  "tags": ["artistas"],
+  "permalink": "/artistas/{{ slug }}/index.html"
+}

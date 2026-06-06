@@ -1,0 +1,12 @@
+<header class="nav" id="site-nav">
+  <a class="brand" href="/">{{ site.name }}</a>
+  <nav class="nav-links" aria-label="principal">
+    <a class="primary" href="/exposicoes/" {% if page.url.startsWith('/exposicoes') %}aria-current="page"{% endif %}>Exposições</a>
+    <a href="/sobre/" {% if page.url == '/sobre/' %}aria-current="page"{% endif %}>Sobre</a>
+    <a href="/contato/" {% if page.url == '/contato/' %}aria-current="page"{% endif %}>Contato</a>
+    <a class="nav-auth primary" href="/entrar/" data-when-loggedout>Entrar</a>
+    <a class="nav-auth" href="/painel/" data-when-loggedin data-only-admin hidden>Painel</a>
+    <a class="nav-auth" href="/minha-conta/" data-when-loggedin hidden>Minha conta</a>
+    <a class="nav-auth" href="#" data-logout data-when-loggedin hidden>Sair</a>
+  </nav>
+</header>

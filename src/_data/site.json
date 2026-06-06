@@ -1,0 +1,15 @@
+{
+  "name": "Companhia Artística Brasileira",
+  "tagline": "Arte coletiva — São Paulo",
+  "about": "Companhia Artística Brasileira — coletivo de arte de São Paulo.",
+  "logo": "",
+  "contact": { "email": "contato@coletivo.com.br", "whatsapp": "" },
+  "social": [
+    { "platform": "Instagram", "url": "https://instagram.com/" }
+  ],
+  "seo": {
+    "defaultTitle": "Companhia Artística Brasileira",
+    "description": "Companhia Artística Brasileira — coletivo de arte de São Paulo.",
+    "shareImage": "/uploads/og.jpg"
+  }
+}

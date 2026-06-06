@@ -1,0 +1,26 @@
+---
+layout: base.njk
+title: "Entrar"
+---
+<section class="auth-page">
+  <div class="auth-card">
+    <p class="kicker">Acesso</p>
+    <h1 class="auth-title">Entrar</h1>
+    <p class="auth-text" data-when-loggedout>
+      Artistas: personalize o seu perfil. Administração: gerencie as exposições.
+    </p>
+    <p class="auth-text" data-when-loggedin hidden>
+      Você já está conectado. Escolha para onde ir:
+    </p>
+
+    <button class="btn-primary" type="button" data-login data-when-loggedout>Entrar / Criar acesso</button>
+
+    <div class="auth-actions" data-when-loggedin hidden>
+      <a class="btn-primary" href="/minha-conta/">Ir para meu perfil</a>
+      <a class="btn-primary" href="/painel/" data-only-admin hidden>Ir para o painel</a>
+      <button class="btn-ghost" type="button" data-logout>Sair</button>
+    </div>
+
+    <p class="auth-note">O acesso é por convite. Em caso de dúvida, fale com a administração do coletivo.</p>
+  </div>
+</section>

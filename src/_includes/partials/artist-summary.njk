@@ -1,0 +1,15 @@
+{% if participations and participations.length %}
+<div class="artists-block">
+  <p class="a-label">Artistas — toque para conhecer</p>
+  <ul class="artists">
+    {% for p in participations %}
+    {% set artistData = collections.artistas | getArtist(p.artist) %}
+    <li>
+      <a href="/artistas/{{ p.artist }}/">
+        {{ artistData.data.name if artistData else p.artist }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

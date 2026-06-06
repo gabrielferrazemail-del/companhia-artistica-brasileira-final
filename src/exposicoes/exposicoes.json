@@ -1,0 +1,5 @@
+{
+  "layout": "exposicao.njk",
+  "tags": ["exposicoes"],
+  "permalink": "/exposicoes/{{ slug }}/index.html"
+}

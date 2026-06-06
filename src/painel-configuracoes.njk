@@ -1,0 +1,100 @@
+---
+layout: base.njk
+title: "Configurações do site"
+permalink: /painel/configuracoes/index.html
+---
+<section class="painel-page editor-page" id="config">
+  <header class="page-header">
+    <p class="kicker">Administração</p>
+    <h1 class="page-title">Configurações do site</h1>
+    <p class="page-sub" id="cfg-sub">Carregando…</p>
+  </header>
+
+  <div id="cfg-guest" hidden>
+    <p>Você precisa entrar como administração.</p>
+    <button class="btn-primary" type="button" data-login>Entrar</button>
+  </div>
+  <div id="cfg-noadmin" hidden>
+    <p>Esta área é restrita à administração do coletivo.</p>
+    <a class="btn-ghost" href="/">Voltar ao site</a>
+  </div>
+  <div id="cfg-error" hidden><p id="cfg-error-msg">Não foi possível carregar.</p></div>
+
+  <form id="config-form" hidden novalidate>
+    <div class="form-grid">
+      <div class="field">
+        <label for="c-name">Nome do coletivo *</label>
+        <input id="c-name" type="text" required>
+      </div>
+      <div class="field">
+        <label for="c-tagline">Slogan / tagline</label>
+        <input id="c-tagline" type="text">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="c-about">Sobre (markdown)</label>
+      <textarea id="c-about" rows="5"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Logo</label>
+      <div class="photo-row">
+        <img id="c-logo-preview" alt="Logo" hidden>
+        <input id="c-logo" type="file" accept="image/*">
+        <button type="button" class="btn-ghost btn-sm" id="c-logo-clear" hidden>Remover</button>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="c-email">E-mail de contato</label>
+        <input id="c-email" type="email">
+      </div>
+      <div class="field">
+        <label for="c-whatsapp">WhatsApp</label>
+        <input id="c-whatsapp" type="text" placeholder="ex.: 5511999999999">
+      </div>
+    </div>
+
+    <fieldset class="field">
+      <legend>Redes sociais</legend>
+      <div id="c-social"></div>
+      <button type="button" class="btn-ghost btn-sm" id="c-add-social">+ Adicionar rede</button>
+    </fieldset>
+
+    <h2 class="section-title" style="font-size:18px;margin-top:8px">SEO / compartilhamento</h2>
+    <div class="form-grid">
+      <div class="field">
+        <label for="c-seo-title">Título padrão</label>
+        <input id="c-seo-title" type="text">
+      </div>
+      <div class="field">
+        <label>Imagem de compartilhamento (OG)</label>
+        <div class="photo-row">
+          <img id="c-og-preview" alt="OG" hidden>
+          <input id="c-og" type="file" accept="image/*">
+          <button type="button" class="btn-ghost btn-sm" id="c-og-clear" hidden>Remover</button>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="c-seo-desc">Descrição (meta description)</label>
+      <textarea id="c-seo-desc" rows="2"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit" id="c-save">Salvar configurações</button>
+      <a class="btn-ghost" href="/painel/">Cancelar</a>
+      <span id="cfg-status" class="save-status" role="status"></span>
+    </div>
+  </form>
+</section>
+
+<template id="tpl-social">
+  <div class="link-row">
+    <input type="text" class="so-platform" placeholder="Plataforma (ex.: Instagram)">
+    <input type="url" class="so-url" placeholder="https://…">
+    <button type="button" class="btn-ghost btn-sm so-remove" aria-label="Remover">×</button>
+  </div>
+</template>

@@ -1,0 +1,20 @@
+{% if gallery and gallery.length %}
+<div class="s-gallery" role="list">
+  {% for item in gallery %}
+  <figure class="tile" role="listitem">
+    {% if item.image %}
+      <img src="{{ item.image }}" alt="{{ item.alt or '' }}" loading="lazy">
+    {% else %}
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <rect x="3" y="3" width="18" height="18" rx="1"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <path d="m21 15-5-5L5 21"/>
+      </svg>
+    {% endif %}
+    {% if item.caption or item.credit %}
+      <figcaption class="tile-caption">{{ item.caption }}{% if item.credit %} — {{ item.credit }}{% endif %}</figcaption>
+    {% endif %}
+  </figure>
+  {% endfor %}
+</div>
+{% endif %}

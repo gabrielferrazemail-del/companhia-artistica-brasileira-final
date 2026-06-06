@@ -1,0 +1,29 @@
+---
+layout: base.njk
+title: "Contato"
+---
+<section class="page-section">
+  <header class="page-header">
+    <h1 class="page-title">Contato</h1>
+  </header>
+  <div class="contato-body">
+    {% if site.contact.email %}
+    <p class="contato-item">
+      <span class="contato-label">E-mail</span>
+      <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+    </p>
+    {% endif %}
+    {% if site.contact.whatsapp %}
+    <p class="contato-item">
+      <span class="contato-label">WhatsApp</span>
+      <a href="https://wa.me/{{ site.contact.whatsapp }}">{{ site.contact.whatsapp }}</a>
+    </p>
+    {% endif %}
+    {% for s in site.social %}
+    <p class="contato-item">
+      <span class="contato-label">{{ s.platform }}</span>
+      <a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.url }}</a>
+    </p>
+    {% endfor %}
+  </div>
+</section>

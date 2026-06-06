@@ -1,0 +1,14 @@
+<footer class="footer">
+  <div class="footer-in">
+    <div class="big-brand">{{ site.name }}</div>
+    <div class="f-meta">
+      {% for s in site.social %}
+        <a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.platform }}</a>
+      {% endfor %}
+      {% if site.contact.email %}
+        <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+      {% endif %}
+      <span>São Paulo · 2026</span>
+    </div>
+  </div>
+</footer>

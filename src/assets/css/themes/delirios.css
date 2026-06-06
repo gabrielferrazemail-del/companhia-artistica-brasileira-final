@@ -1,0 +1,62 @@
+/* ========== Pele "Delírios Anatômicos" ========== */
+
+[data-theme="delirios"] {
+  --bg: #ece3d1;
+  --bg-2: #e4d9c3;
+  --bg-3: #dccfb4;
+  --text: #1f1812;
+  --text-soft: #6a5e4e;
+  --line: rgba(31, 24, 18, .18);
+  --green: #7fae37;
+  --magenta: #d2477f;
+  --cyan: #37a6bd;
+  --font-display: "Anton", sans-serif;
+  --font-body: "Fraunces", Georgia, serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+}
+
+/* Nav background adapts to paper */
+[data-theme="delirios"] .nav {
+  background: rgba(236, 227, 209, .88);
+}
+
+/* Título display: Anton não tem peso variável */
+[data-theme="delirios"] .title {
+  font-size: clamp(52px, 13.5vw, 168px);
+  line-height: .95;        /* respiro para o acento (Ô, Í) não ser cortado entre linhas */
+  max-width: 12ch;
+}
+
+[data-theme="delirios"] .home-title {
+  font-size: clamp(48px, 10vw, 120px);
+  line-height: .95;
+}
+
+/* Curatorial drop cap */
+[data-theme="delirios"] .curatorial-body p:first-of-type {
+  font-size: clamp(20px, 2.8vw, 29px);
+  line-height: 1.38;
+}
+[data-theme="delirios"] .curatorial-body p:first-of-type::first-letter {
+  font-family: var(--font-display);
+  float: left;
+  font-size: 3.3em;
+  line-height: .66;
+  padding: 8px 12px 0 0;
+  color: var(--magenta);
+}
+
+/* Artist names: Fraunces serifado */
+[data-theme="delirios"] .artists a {
+  font-family: var(--font-body);
+  font-size: clamp(19px, 2.2vw, 25px);
+}
+
+/* Footer big brand */
+[data-theme="delirios"] .big-brand {
+  font-family: var(--font-display);
+}
+[data-theme="delirios"] .brand {
+  font-family: var(--font-display);
+  font-weight: 400;
+}

@@ -1,0 +1,93 @@
+---
+layout: base.njk
+---
+<article>
+  <section class="hero">
+    <div class="blobs" aria-hidden="true">
+      <span class="blob g"></span>
+      <span class="blob m"></span>
+      <span class="blob c"></span>
+    </div>
+    <p class="eyebrow reveal" style="--d:.05s">
+      Exposição · {{ effectiveStatus | statusLabel }}
+    </p>
+    <h1 class="title reveal" style="--d:.12s">
+      {% for word in title.split(" ") %}<span>{{ word }}</span>{% endfor %}
+    </h1>
+    {% if summary %}
+    <p class="lede reveal" style="--d:.24s">{{ summary }}</p>
+    {% endif %}
+    <div class="meta-row reveal" style="--d:.32s">
+      {% if start_date %}
+      <span>
+        {% if end_date %}{{ start_date | formatDateShort }} – {{ end_date | formatDateShort }}{% else %}{{ start_date | formatDate }}{% endif %}
+      </span>
+      {% endif %}
+      <span>{{ location.name if location.name else "Local a definir" }}</span>
+      {% if credits.curator %}
+      <span>Curadoria · {{ credits.curator }}</span>
+      {% elif credits.curators and credits.curators.length %}
+      <span>Curadoria ·
+        {% for curSlug in credits.curators %}
+          {% set cur = collections.artistas | getArtist(curSlug) %}
+          {{ cur.data.name if cur else curSlug }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+      </span>
+      {% endif %}
+    </div>
+  </section>
+
+  {% if cover %}
+  <section class="capa reveal" style="--d:.1s">
+    <div class="frame">
+      <img src="{{ cover }}" alt="Capa — {{ title }}" loading="eager">
+    </div>
+    {% if credits.photography %}
+    <p class="caption">Fotografia de {{ credits.photography }}</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <section class="curatorial">
+    <p class="kicker reveal">Sobre a exposição</p>
+    <div class="curatorial-body reveal">
+      {{ content | safe }}
+    </div>
+  </section>
+
+  {% if influences %}
+  <section class="curatorial influencias">
+    <p class="kicker reveal">Influências</p>
+    <div class="curatorial-body reveal">
+      {% for para in influences.split("\n\n") %}
+        {% set p = para | trim %}
+        {% if p %}<p>{{ p }}</p>{% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if gallery and gallery.length %}
+  <section class="curatorial galeria">
+    <p class="kicker reveal">Galeria</p>
+    <div class="reveal">
+      {% include "partials/gallery.njk" %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% set artistSlugs = participations | artistsInExposition %}
+  {% if artistSlugs and artistSlugs.length %}
+  <section class="sessions">
+    <h2 class="sessions-h reveal">Artistas</h2>
+    <p class="a-label reveal">Toque em um nome para conhecer</p>
+    {% set accents = ["var(--magenta)", "var(--cyan)", "var(--green)"] %}
+    <ul class="artists artists-all reveal">
+      {% for slug in artistSlugs %}
+        {% set a = collections.artistas | getArtist(slug) %}
+        <li><a href="/artistas/{{ slug }}/" style="--ac:{{ accents[loop.index0 % 3] }}">{{ a.data.name if a else slug }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</article>

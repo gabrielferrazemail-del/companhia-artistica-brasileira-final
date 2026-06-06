@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title %}{{ title }} — {% elif name %}{{ name }} — {% endif %}{{ site.seo.defaultTitle }}</title>
+  <meta name="description" content="{{ description or site.seo.description }}">
+  <meta property="og:title" content="{{ title or site.seo.defaultTitle }}">
+  <meta property="og:description" content="{{ description or site.seo.description }}">
+  <meta property="og:image" content="{{ ogImage or site.seo.shareImage }}">
+  <meta property="og:type" content="website">
+
+  {% if theme == "delirios" %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  {% else %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  {% endif %}
+
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  {% if theme == "delirios" %}
+  <link rel="stylesheet" href="/assets/css/themes/delirios.css">
+  {% endif %}
+</head>
+<body data-theme="{{ theme or 'default' }}">
+  <div class="grain" aria-hidden="true"></div>
+  {% if theme == "delirios" %}
+  <span class="crop tl" aria-hidden="true"></span>
+  <span class="crop tr" aria-hidden="true"></span>
+  <span class="crop bl" aria-hidden="true"></span>
+  <span class="crop br" aria-hidden="true"></span>
+  {% endif %}
+
+  {% include "partials/nav.njk" %}
+
+  <main id="main-content">
+    {{ content | safe }}
+  </main>
+
+  {% include "partials/footer.njk" %}
+
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+  <script src="/assets/js/identity.js" defer></script>
+  <script src="/assets/js/main.js" defer></script>
+  {% if page.url == "/minha-conta/" %}
+  <script src="/assets/js/minha-conta.js" defer></script>
+  {% endif %}
+  {% if page.url == "/painel/" %}
+  <script src="/assets/js/painel.js" defer></script>
+  {% endif %}
+  {% if page.url == "/painel/editar/" %}
+  <script src="/assets/js/painel-editar.js" defer></script>
+  {% endif %}
+  {% if page.url == "/painel/editar-artista/" %}
+  <script src="/assets/js/painel-editar-artista.js" defer></script>
+  {% endif %}
+  {% if page.url == "/painel/configuracoes/" %}
+  <script src="/assets/js/painel-configuracoes.js" defer></script>
+  {% endif %}
+  {% if page.url == "/painel/contatos/" %}
+  <script src="/assets/js/painel-contatos.js" defer></script>
+  {% endif %}
+</body>
+</html>

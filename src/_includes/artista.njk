@@ -1,0 +1,83 @@
+---
+layout: base.njk
+---
+<article class="artista-page">
+  <header class="artista-header">
+    {% if photo %}
+    <div class="artista-photo">
+      <img src="{{ photo }}" alt="{{ name }}" loading="eager">
+    </div>
+    {% endif %}
+    <div class="artista-info">
+      <h1 class="artista-name">{{ name }}</h1>
+      {% if tagline %}<p class="artista-tagline">{{ tagline }}</p>{% endif %}
+      {% if roles and roles.length %}
+      <div class="artista-roles">
+        {% for role in roles %}
+        <span class="badge">{{ role }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+      {% if links and links.length %}
+      <div class="artista-links">
+        {% for link in links %}
+        {% if link.url %}
+        <a href="{{ link.url }}" target="_blank" rel="noopener" class="artista-link">{{ link.type }}</a>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  {% if content and content | trim %}
+  <section class="artista-bio">
+    <p class="kicker">Bio</p>
+    <div class="bio-body">{{ content | safe }}</div>
+  </section>
+  {% endif %}
+
+  {% set worksData = collections.exposicoes | worksByArtist(slug) %}
+  {% if worksData and worksData.length %}
+  <section class="artista-obras">
+    <p class="kicker">Obras</p>
+    {% for group in worksData %}
+    <div class="obras-group">
+      <h2 class="obras-expo-title">{{ group.exhibition.data.title }}</h2>
+      <div class="s-gallery">
+        {% for work in group.works %}
+        <figure class="tile">
+          {% if work.image %}
+          <img src="{{ work.image }}" alt="{{ work.title or name }}" loading="lazy">
+          {% endif %}
+          {% if work.title or work.technique %}
+          <figcaption class="tile-caption">
+            {% if work.title %}<strong>{{ work.title }}</strong>{% endif %}
+            {% if work.technique %}<br>{{ work.technique }}{% endif %}
+            {% if work.dimensions %} · {{ work.dimensions }}{% endif %}
+          </figcaption>
+          {% endif %}
+        </figure>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% set expos = collections.exposicoes | exhibitionsByArtist(slug) %}
+  {% if expos and expos.length %}
+  <section class="artista-expos">
+    <p class="kicker">Participou de</p>
+    <ul class="expos-list">
+      {% for expo in expos %}
+      <li><a href="/exposicoes/{{ expo.data.slug }}/">{{ expo.data.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <div class="artista-back">
+    <a href="javascript:history.back()" class="btn-back">← Voltar</a>
+  </div>
+</article>

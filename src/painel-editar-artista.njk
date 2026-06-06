@@ -1,0 +1,87 @@
+---
+layout: base.njk
+title: "Editar artista"
+permalink: /painel/editar-artista/index.html
+---
+<section class="painel-page editor-page" id="editor-artista">
+  <header class="page-header">
+    <p class="kicker">Administração</p>
+    <h1 class="page-title" id="ea-title">Artista</h1>
+    <p class="page-sub" id="ea-sub">Carregando…</p>
+  </header>
+
+  <div id="ea-guest" hidden>
+    <p>Você precisa entrar como administração.</p>
+    <button class="btn-primary" type="button" data-login>Entrar</button>
+  </div>
+  <div id="ea-noadmin" hidden>
+    <p>Esta área é restrita à administração do coletivo.</p>
+    <a class="btn-ghost" href="/">Voltar ao site</a>
+  </div>
+  <div id="ea-error" hidden><p id="ea-error-msg">Não foi possível carregar.</p></div>
+
+  <form id="artista-form" hidden novalidate>
+    <div class="form-grid">
+      <div class="field">
+        <label for="a-name">Nome *</label>
+        <input id="a-name" type="text" required>
+      </div>
+      <div class="field">
+        <label for="a-slug">Slug *</label>
+        <input id="a-slug" type="text" placeholder="ex.: carlos-henrique" required>
+        <p class="field-hint">URL: /artistas/<span id="a-slug-preview">slug</span>/</p>
+      </div>
+      <div class="field">
+        <label for="a-email">E-mail (login do artista)</label>
+        <input id="a-email" type="email" placeholder="ex.: artista@email.com">
+        <p class="field-hint">Usado para vincular automaticamente o login ao perfil.</p>
+      </div>
+      <div class="field">
+        <label for="a-tagline">Tagline</label>
+        <input id="a-tagline" type="text" placeholder="ex.: Ilustrador · tatuador">
+      </div>
+      <div class="field">
+        <label>Foto</label>
+        <div class="photo-row">
+          <img id="a-photo-preview" alt="Foto" hidden>
+          <input id="a-photo" type="file" accept="image/*">
+          <button type="button" class="btn-ghost btn-sm" id="a-photo-clear" hidden>Remover</button>
+        </div>
+      </div>
+    </div>
+
+    <fieldset class="field">
+      <legend>Papéis</legend>
+      <div class="chips" id="a-roles">
+        <label class="chip"><input type="checkbox" value="artista"> artista</label>
+        <label class="chip"><input type="checkbox" value="curador"> curador</label>
+        <label class="chip"><input type="checkbox" value="fotografo"> fotógrafo</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend>Links</legend>
+      <div id="a-links"></div>
+      <button type="button" class="btn-ghost btn-sm" id="a-add-link">+ Adicionar link</button>
+    </fieldset>
+
+    <div class="field">
+      <label for="a-bio">Bio (markdown)</label>
+      <textarea id="a-bio" rows="6"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit" id="a-save">Salvar artista</button>
+      <a class="btn-ghost" href="/painel/">Cancelar</a>
+      <span id="ea-status" class="save-status" role="status"></span>
+    </div>
+  </form>
+</section>
+
+<template id="tpl-link">
+  <div class="link-row">
+    <input type="text" class="l-type" placeholder="Tipo (ex.: Instagram)">
+    <input type="url" class="l-url" placeholder="https://…">
+    <button type="button" class="btn-ghost btn-sm l-remove" aria-label="Remover">×</button>
+  </div>
+</template>

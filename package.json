@@ -1,0 +1,15 @@
+{
+  "name": "coletivo-site",
+  "version": "1.0.0",
+  "description": "Site do coletivo de arte — São Paulo",
+  "scripts": {
+    "build": "eleventy",
+    "start": "eleventy --serve",
+    "dev": "eleventy --serve --watch"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-img": "^5.0.0",
+    "gray-matter": "^4.0.3"
+  }
+}

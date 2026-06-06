@@ -1,0 +1,9 @@
+---
+permalink: /api/artistas.json
+eleventyExcludeFromCollections: true
+---
+{%- set arr = [] -%}
+{%- for a in collections.artistas -%}
+{%- set _ = arr.push({ slug: a.data.slug, name: a.data.name }) -%}
+{%- endfor -%}
+{{ arr | dump | safe }}

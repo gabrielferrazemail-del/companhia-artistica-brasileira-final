@@ -1,0 +1,175 @@
+---
+layout: base.njk
+title: "Editar exposição"
+permalink: /painel/editar/index.html
+---
+<section class="painel-page editor-page" id="editor">
+  <header class="page-header">
+    <p class="kicker">Administração</p>
+    <h1 class="page-title" id="editor-title">Exposição</h1>
+    <p class="page-sub" id="editor-sub">Carregando…</p>
+  </header>
+
+  <div id="editor-guest" hidden>
+    <p>Você precisa entrar como administração.</p>
+    <button class="btn-primary" type="button" data-login>Entrar</button>
+  </div>
+
+  <div id="editor-noadmin" hidden>
+    <p>Esta área é restrita à administração do coletivo.</p>
+    <a class="btn-ghost" href="/">Voltar ao site</a>
+  </div>
+
+  <div id="editor-error" hidden>
+    <p id="editor-error-msg">Não foi possível carregar.</p>
+  </div>
+
+  <form id="expo-form" hidden novalidate>
+    <p class="editor-help">
+      Preencha os campos abaixo. Só <strong>Título</strong> e <strong>Slug</strong> são obrigatórios.
+      Deixe em <strong>Rascunho</strong> enquanto monta a exposição (fica oculta no site);
+      mude para <strong>Publicada</strong> quando estiver pronta. Se em cartaz, em breve ou
+      encerrada é decidido automaticamente pelas <strong>datas</strong>.
+    </p>
+    <div class="form-grid">
+      <div class="field">
+        <label for="f-title">Título *</label>
+        <input id="f-title" type="text" required>
+      </div>
+      <div class="field">
+        <label for="f-slug">Slug *</label>
+        <input id="f-slug" type="text" placeholder="ex.: delirios-anatomicos" required>
+        <p class="field-hint">URL: /exposicoes/<span id="slug-preview">slug</span>/</p>
+      </div>
+      <div class="field">
+        <label for="f-status">Status (manual)</label>
+        <select id="f-status">
+          <option value="rascunho">Rascunho (oculto)</option>
+          <option value="em-cartaz">Publicada</option>
+        </select>
+        <p class="field-hint">"Em breve / em cartaz / encerrada" é calculado pela data automaticamente.</p>
+      </div>
+      <div class="field">
+        <label for="f-theme">Tema visual</label>
+        <select id="f-theme">
+          <option value="default">Padrão (neutro)</option>
+          <option value="delirios">Delírios (pele sépia)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-start">Início</label>
+        <input id="f-start" type="date">
+      </div>
+      <div class="field">
+        <label for="f-end">Fim (deixe vazio se for data única)</label>
+        <input id="f-end" type="date">
+      </div>
+      <div class="field">
+        <label for="f-loc-name">Local — nome</label>
+        <input id="f-loc-name" type="text" placeholder="ex.: Galeria R. Monteiro">
+      </div>
+      <div class="field">
+        <label for="f-loc-addr">Local — endereço</label>
+        <input id="f-loc-addr" type="text">
+      </div>
+      <div class="field">
+        <label for="f-photo">Fotografia (crédito)</label>
+        <input id="f-photo" type="text">
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="f-summary">Resumo (1–2 frases)</label>
+      <textarea id="f-summary" rows="2"></textarea>
+    </div>
+
+    <div class="field">
+      <label>Capa</label>
+      <div class="photo-row">
+        <img id="f-cover-preview" alt="Capa" hidden>
+        <input id="f-cover" type="file" accept="image/*">
+        <button type="button" class="btn-ghost btn-sm" id="f-cover-clear" hidden>Remover capa</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="f-curator">Curadoria — nome</label>
+      <input id="f-curator" type="text" placeholder="ex.: Carlos Henrique">
+    </div>
+
+    <div class="field">
+      <label for="f-body">Texto curatorial (markdown)</label>
+      <textarea id="f-body" rows="8"></textarea>
+    </div>
+
+    <div class="field">
+      <label for="f-influences">Influências (markdown)</label>
+      <textarea id="f-influences" rows="6"></textarea>
+    </div>
+
+    <fieldset class="field">
+      <legend>Artistas</legend>
+      <div id="artists-list"></div>
+      <button type="button" class="btn-ghost btn-sm" id="add-artist">+ Adicionar artista</button>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend>Galeria (fotos)</legend>
+      <div id="gallery-list"></div>
+      <button type="button" class="btn-ghost btn-sm" id="add-photo">+ Adicionar foto</button>
+      <p class="field-hint">Fotos exibidas na página da exposição. (Vídeos virão depois.)</p>
+    </fieldset>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit" id="save-expo">Salvar exposição</button>
+      <a class="btn-ghost" href="/painel/">Cancelar</a>
+      <span id="editor-status" class="save-status" role="status"></span>
+    </div>
+  </form>
+</section>
+
+<!-- Templates de itens dinâmicos -->
+<template id="tpl-part">
+  <div class="part-row">
+    <div class="part-head">
+      <select class="p-artist"></select>
+      <button type="button" class="btn-ghost btn-sm p-remove">Remover artista</button>
+    </div>
+    <div class="works">
+      <p class="mini-label">Obras deste artista</p>
+      <div class="works-list"></div>
+      <button type="button" class="btn-ghost btn-sm add-work">+ Adicionar obra</button>
+    </div>
+  </div>
+</template>
+
+<template id="tpl-work">
+  <div class="work-row">
+    <div class="work-img">
+      <img class="w-preview" alt="Obra" hidden>
+      <input type="file" class="w-file" accept="image/*">
+    </div>
+    <div class="work-fields">
+      <input type="text" class="w-title" placeholder="Título da obra">
+      <input type="text" class="w-technique" placeholder="Técnica">
+      <input type="text" class="w-dimensions" placeholder="Dimensões">
+      <textarea class="w-description" rows="2" placeholder="Descrição"></textarea>
+    </div>
+    <button type="button" class="btn-ghost btn-sm w-remove" aria-label="Remover obra">×</button>
+  </div>
+</template>
+
+<template id="tpl-photo">
+  <div class="work-row photo-item">
+    <div class="work-img">
+      <img class="ph-preview" alt="Foto" hidden>
+      <input type="file" class="ph-file" accept="image/*">
+    </div>
+    <div class="work-fields">
+      <input type="text" class="ph-alt" placeholder="Texto alternativo (descrição da imagem)">
+      <input type="text" class="ph-caption" placeholder="Legenda">
+      <input type="text" class="ph-credit" placeholder="Crédito (fotógrafo)">
+    </div>
+    <button type="button" class="btn-ghost btn-sm ph-remove" aria-label="Remover foto">×</button>
+  </div>
+</template>

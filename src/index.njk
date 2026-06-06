@@ -1,0 +1,56 @@
+---
+layout: base.njk
+title: ""
+---
+{% set destaque = null %}
+{% for expo in collections.exposicoes %}
+  {% if not destaque and (expo.data.effectiveStatus == "em-cartaz" or expo.data.effectiveStatus == "em-breve") %}
+    {% set destaque = expo %}
+  {% endif %}
+{% endfor %}
+
+{% if destaque %}
+<section class="home-hero">
+  <div class="home-hero-inner">
+    <div class="home-hero-text">
+      <p class="eyebrow">Exposição · {{ destaque.data.effectiveStatus | statusLabel }}</p>
+      <h1 class="home-title">{{ destaque.data.title }}</h1>
+      {% if destaque.data.summary %}
+      <p class="home-lede">{{ destaque.data.summary }}</p>
+      {% endif %}
+      <div class="meta-row">
+        {% if destaque.data.start_date %}
+        <span>
+          {% if destaque.data.end_date %}{{ destaque.data.start_date | formatDateShort }} – {{ destaque.data.end_date | formatDateShort }}{% else %}{{ destaque.data.start_date | formatDate }}{% endif %}
+        </span>
+        {% endif %}
+        <span>{{ destaque.data.location.name if destaque.data.location.name else "Local a definir" }}</span>
+      </div>
+      <a href="/exposicoes/{{ destaque.data.slug }}/" class="btn-primary">Ver exposição</a>
+    </div>
+    {% if destaque.data.cover %}
+    <div class="home-hero-img">
+      <img src="{{ destaque.data.cover }}" alt="{{ destaque.data.title }}" loading="eager">
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endif %}
+
+{% set temAnteriores = false %}
+{% for expo in collections.exposicoes %}
+  {% if expo.data.effectiveStatus == "encerrada" %}{% set temAnteriores = true %}{% endif %}
+{% endfor %}
+
+{% if temAnteriores %}
+<section class="home-anteriores">
+  <h2 class="section-title">Exposições anteriores</h2>
+  <div class="expo-grid">
+    {% for expo in collections.exposicoes %}
+      {% if expo.data.effectiveStatus == "encerrada" %}
+        {% include "partials/exhibition-card.njk" %}
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
+{% endif %}

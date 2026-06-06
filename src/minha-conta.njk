@@ -1,0 +1,70 @@
+---
+layout: base.njk
+title: "Minha conta"
+---
+<section class="account-page" id="account-page">
+  <header class="page-header">
+    <p class="kicker">Meu perfil</p>
+    <h1 class="page-title">Minha conta</h1>
+    <p class="page-sub" id="account-sub">Carregando…</p>
+  </header>
+
+  <!-- Estado: não autenticado -->
+  <div id="account-guest" hidden>
+    <p>Você precisa entrar para editar o seu perfil.</p>
+    <button class="btn-primary" type="button" data-login>Entrar</button>
+  </div>
+
+  <!-- Estado: autenticado mas sem perfil vinculado -->
+  <div id="account-noslug" hidden>
+    <p>
+      A sua conta ainda não está vinculada a um perfil de artista.
+      Peça à administração para vincular o seu acesso ao seu perfil.
+    </p>
+    <button class="btn-ghost" type="button" data-logout>Sair</button>
+  </div>
+
+  <!-- Estado: erro -->
+  <div id="account-error" hidden>
+    <p id="account-error-msg">Não foi possível carregar o seu perfil.</p>
+  </div>
+
+  <!-- Formulário do perfil -->
+  <form id="account-form" hidden novalidate>
+    <div class="field">
+      <label for="f-name">Nome</label>
+      <input id="f-name" name="name" type="text" required>
+    </div>
+
+    <div class="field">
+      <label for="f-tagline">Tagline</label>
+      <input id="f-tagline" name="tagline" type="text" placeholder="Ex.: Ilustrador · tatuador">
+    </div>
+
+    <div class="field">
+      <label for="f-photo">Foto</label>
+      <div class="photo-row">
+        <img id="f-photo-preview" alt="Pré-visualização da foto" hidden>
+        <input id="f-photo" name="photo" type="file" accept="image/*">
+      </div>
+      <p class="field-hint">Opcional. Substitui a foto atual ao salvar.</p>
+    </div>
+
+    <fieldset class="field">
+      <legend>Links</legend>
+      <div id="links-list"></div>
+      <button class="btn-ghost btn-sm" type="button" id="add-link">+ Adicionar link</button>
+    </fieldset>
+
+    <div class="field">
+      <label for="f-bio">Bio</label>
+      <textarea id="f-bio" name="bio" rows="8" placeholder="Escreva a sua bio (markdown)…"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button class="btn-primary" type="submit" id="save-btn">Salvar perfil</button>
+      <a class="btn-ghost" href="#" id="view-link" hidden>Ver minha página</a>
+      <span id="save-status" class="save-status" role="status"></span>
+    </div>
+  </form>
+</section>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Registro da montagem 03">
+  <rect width="800" height="800" fill="#dccfb4"/>
+  <circle cx="540" cy="540" r="230" fill="#7fae37" opacity="0.16"/>
+  <circle cx="300" cy="280" r="170" fill="#d2477f" opacity="0.20"/>
+  <rect x="40" y="40" width="720" height="720" fill="none" stroke="#1f1812" stroke-opacity="0.22" stroke-width="2"/>
+  <text x="62" y="190" font-family="Georgia, 'Times New Roman', serif" font-size="150" font-weight="700" fill="#1f1812" opacity="0.88">03</text>
+  <text x="64" y="724" font-family="'Space Mono', ui-monospace, monospace" font-size="24" letter-spacing="6" fill="#6a5e4e">REGISTRO · DELÍRIOS</text>
+</svg>

@@ -1,0 +1,71 @@
+---
+layout: base.njk
+title: "Painel de controle"
+permalink: /painel/index.html
+---
+<section class="painel-page" id="painel">
+  <header class="page-header">
+    <p class="kicker">Administração</p>
+    <h1 class="page-title">Painel de controle</h1>
+    <p class="page-sub" id="painel-sub">Carregando…</p>
+  </header>
+
+  <div id="painel-guest" hidden>
+    <p>Você precisa entrar como administração para acessar o painel.</p>
+    <button class="btn-primary" type="button" data-login>Entrar</button>
+  </div>
+
+  <div id="painel-noadmin" hidden>
+    <p>Esta área é restrita à administração do coletivo.</p>
+    <div class="painel-actions">
+      <a class="btn-ghost" href="/minha-conta/">Ir para meu perfil</a>
+      <button class="btn-ghost" type="button" data-logout>Sair</button>
+    </div>
+  </div>
+
+  <div id="painel-error" hidden>
+    <p id="painel-error-msg">Não foi possível carregar as exposições.</p>
+  </div>
+
+  <div id="painel-content" hidden>
+    <div class="painel-topbar">
+      <button class="btn-ghost btn-sm" type="button" data-logout>Sair</button>
+    </div>
+
+    <div class="painel-section">
+      <div class="painel-section-head">
+        <h2 class="section-title">Exposições</h2>
+        <div class="painel-head-actions">
+          <button class="btn-ghost btn-sm" type="button" id="save-order" hidden>Salvar ordem</button>
+          <a class="btn-primary" href="/painel/editar/">+ Nova exposição</a>
+        </div>
+      </div>
+      <p class="painel-extra">Aparecem nesta ordem no site: <strong>em cartaz</strong>, depois <strong>em breve</strong>, depois <strong>encerradas</strong>. Use as setas ↑ ↓ para mudar a ordem dentro de cada grupo e clique em <strong>Salvar ordem</strong>.</p>
+      <div id="expo-list" class="painel-list"></div>
+    </div>
+
+    <div class="painel-section">
+      <div class="painel-section-head">
+        <h2 class="section-title">Artistas</h2>
+        <a class="btn-primary" href="/painel/editar-artista/">+ Novo artista</a>
+      </div>
+      <div id="artista-list" class="painel-list"></div>
+    </div>
+
+    <div class="painel-section">
+      <div class="painel-section-head">
+        <h2 class="section-title">Contatos e redes sociais</h2>
+        <a class="btn-primary" href="/painel/contatos/">Editar contatos</a>
+      </div>
+      <p class="painel-extra">E-mail, WhatsApp e redes sociais que aparecem na página de Contato e no rodapé.</p>
+    </div>
+
+    <div class="painel-section">
+      <div class="painel-section-head">
+        <h2 class="section-title">Configurações do site</h2>
+        <a class="btn-primary" href="/painel/configuracoes/">Configurações avançadas</a>
+      </div>
+      <p class="painel-extra">Nome do coletivo, slogan, texto "Sobre", logo e SEO (também inclui contatos).</p>
+    </div>
+  </div>
+</section>
