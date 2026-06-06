@@ -1,7 +1,23 @@
 # HANDOFF — Site do coletivo (Companhia Artística Brasileira)
 
 Documento de transferência. Resume o estado completo do projeto para continuar em outra sessão.
-_Última atualização: 2026-06-06._
+_Última atualização: 2026-06-06 (já PUBLICADO na Netlify; ver §0)._
+
+## 0. Estado de produção (AO VIVO)
+- **Site no ar:** https://coletivosite.netlify.app/
+- **Repo GitHub:** `gabrielferrazemail-del/companhia-artistica-brasileira-final` (branch `main`).
+  - Remote `origin` já configurado localmente; `git push` funcionou (credencial do GitHub no Windows).
+- **Hospedagem:** Netlify (plano **Starter / free** — cobre Functions + Identity). `netlify.toml` define o build.
+- **Admin:** e-mail `gabriel.ferraz.email@gmail.com` (via env `ADMIN_EMAILS`).
+- **Identity:** habilitado, **invite only**.
+- **Env vars na Netlify:** `GITHUB_TOKEN` (PAT fine-grained, Contents R/W), `GITHUB_REPO`
+  (`gabrielferrazemail-del/companhia-artistica-brasileira-final`), `GITHUB_BRANCH` (`main`), `ADMIN_EMAILS`.
+- ⚠️ **PENDÊNCIA EM ANDAMENTO:** login funciona, mas no 1º teste o usuário entrou **sem** virar admin
+  porque **as env vars foram adicionadas SEM acionar um novo deploy** (na Netlify, env var só vale após
+  *Trigger deploy*). Correção pendente: conferir `ADMIN_EMAILS` = `gabriel.ferraz.email@gmail.com`
+  (exato) → **Deploys → Trigger deploy** → no site **Sair e entrar de novo** (limpa cache de
+  `checkAdmin`) → abrir `/painel/`.
+- 🔐 O usuário colou a **senha** dele no chat numa sessão — **orientado a trocá-la**. Nunca pedir senha.
 
 ## 1. Visão geral
 
@@ -51,7 +67,7 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
 ### Conteúdo / templates (`src/`)
 - `_data/site.json` — config do site (nome, tagline, about, logo, contato, redes, seo).
 - `_includes/base.njk` — layout base: head/SEO/OG, fontes (Anton/Fraunces no delirios, Archivo no
-  padrão), **widget Netlify Identity**, e carrega o JS por página.
+  padrão), **widget Netlify Identity**, e carrega o JS por página (inclui `/painel/contatos/`).
 - `_includes/exposicao.njk` — página de exposição: herói (status por data, local, **Curadoria ·
   nome**), capa, **Sobre a exposição** (corpo md), **Influências**, **Galeria** (fotos —
   `partials/gallery.njk`, após os textos), **Artistas** (lista deduplicada via `artistsInExposition`).
@@ -66,8 +82,11 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
   Monteiro", theme delirios, `credits.curator: "Carlos Henrique"`, `influences` (Exquisite Corpse),
   `gallery` com **3 SVGs placeholder**, `participations` com **19 artistas** (lista plana).
 - `artistas/*.md` — 19 artistas (alguns com campo `email` para login por e-mail).
-- `index.njk` — home (herói destaca em-cartaz OU em-breve; grade "anteriores").
-- `exposicoes.njk` — índice `/exposicoes/` (agrupado por `effectiveStatus`).
+- `index.njk` — home (herói destaca o 1º em-cartaz/em-breve da coleção; grade "anteriores").
+- `exposicoes.njk` — índice `/exposicoes/` (em-cartaz + em-breve no topo, depois "Anteriores").
+- **ORDENAÇÃO (`.eleventy.js`, coleção `exposicoes`):** por status (em-cartaz → em-breve → encerrada →
+  rascunho), depois pelo `order` manual, depois pela data (desc). Isso garante a ordem pedida pelo
+  cliente em todo o site (home, índice e painel).
 - `sobre.njk`, `contato.njk` — páginas simples.
 - `entrar.njk` — **login** (widget Identity). Pós-login mostra botões (sem redirect automático):
   "Ir para meu perfil" (todos) + "Ir para o painel" (`data-only-admin`) + "Sair".
@@ -79,8 +98,11 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
   **Artistas** (lista plana → obras) + **Galeria (fotos)**.
 - `painel-editar-artista.njk` — **editor de artista** (nome, slug, **e-mail**, foto, tagline,
   papéis, links, bio).
-- `painel-configuracoes.njk` — **configurações do site** (nome, tagline, sobre, logo, contato,
-  redes, SEO + imagem OG).
+- `painel-configuracoes.njk` — **configurações avançadas do site** (nome, tagline, sobre, logo,
+  contato, redes, SEO + imagem OG).
+- `painel-contatos.njk` — **tela dedicada de contatos** (`/painel/contatos/`): só e-mail, WhatsApp e
+  redes sociais. Reusa `get-site`/`save-site`; o JS guarda o `site.json` inteiro e faz *merge* (só
+  troca `contact`/`social`, preserva o resto). Tem cartão próprio no `painel.njk`.
 - `artistas-json.njk` → `/api/artistas.json` (lista de artistas para os selects do editor).
 
 ### CSS / JS (`src/assets/`)
@@ -92,8 +114,10 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
 - `js/identity.js` — auth global: `coletivoAuth.{isAdmin, current, token, authFetch, checkAdmin}`.
   **`checkAdmin()`** chama `whoami` (com cache, limpo no logout) e alterna `[data-only-admin]`
   de forma assíncrona; fallback local quando `whoami` não responde.
-- `js/painel.js`, `js/painel-editar.js`, `js/painel-editar-artista.js`, `js/painel-configuracoes.js`
-  — telas do painel; gate de admin via **`await checkAdmin()`**.
+- `js/painel.js` (lista + **agrupa por status e reordena com ↑↓ + "Salvar ordem"**),
+  `js/painel-editar.js`, `js/painel-editar-artista.js`, `js/painel-configuracoes.js`,
+  `js/painel-contatos.js` (tela focada de contatos) — telas do painel; gate de admin via
+  **`await checkAdmin()`**.
 - `js/minha-conta.js` — editor de perfil do artista.
 - `js/main.js` — nav scroll + lightbox.
 
@@ -131,7 +155,9 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
 - **Escrita:** sempre via Netlify Functions com `GITHUB_TOKEN` do servidor. Sem Git Gateway.
 
 ## 6. Deploy
-**Guia completo em `DEPLOY.md`.** Resumo:
+**JÁ FEITO** (ver §0 para os valores reais). **Guia completo em `DEPLOY.md`.** Resumo dos passos:
+0. **Gotcha crítico:** toda vez que mudar uma **env var** na Netlify, é preciso **Trigger deploy**
+   para ela passar a valer nas Functions (foi o tropeço do 1º login admin).
 1. Subir o repo para o GitHub.
 2. Netlify → "Add new site" → importar o repo (build/publish vêm do `netlify.toml`).
 3. Habilitar **Identity** (registration **invite only**).
@@ -143,8 +169,9 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
 7. (Opcional) Apontar domínio (Registro.br → DNS Netlify).
 
 ## 7. ⚠️ Pendências (conteúdo a trocar — placeholders)
+- **[EM ANDAMENTO] Login admin:** resolver o redeploy das env vars (ver §0).
 - `src/_data/site.json`: **Instagram** = `https://instagram.com/` (genérico) e **e-mail** =
-  `contato@coletivo.com.br` são placeholders → trocar pelos reais (painel → Configurações).
+  `contato@coletivo.com.br` são placeholders → trocar pelos reais (**painel → Contatos**, atalho novo).
 - **Galeria do Delírios:** 3 SVGs placeholder em `src/uploads/exposicoes/delirios-anatomicos/` →
   trocar por fotos reais no editor de exposição.
 - `src/uploads/og.jpg`: imagem OG gerada (1200×630, branded) — pode ser trocada no painel.
@@ -160,7 +187,12 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
   **curador em texto**. A página do artista agrega as obras varrendo as exposições.
 
 ## 9. Verificação já feita
-- Build limpo (exit 0, 31 páginas).
+- **AO VIVO (produção):** home `200` (título + herói "Delírios Anatômicos" corretos), `/painel/` `200`,
+  **`/painel/contatos/` `200`** (página nova publicada), função `whoami` responde
+  `{"loggedIn":false,"admin":false,"artistSlug":null}` (Functions no ar). Login Identity funciona.
+- **Ordenação** validada por simulação do comparador: em-cartaz → em-breve (respeitando `order`) →
+  encerrada → rascunho (oculto).
+- Build limpo (exit 0, **32 páginas** após a tela de contatos).
 - **Varredura de links:** 0 links internos quebrados (30 páginas).
 - Galeria renderiza na página da exposição (3 fotos, legendas com crédito).
 - Guard do painel sem login mostra "precisa entrar"; sem erros de JS (home, exposição, painel).
@@ -169,6 +201,10 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
 - Auth por e-mail/`whoami`/`checkAdmin` implementados (testados de verdade só com `netlify dev`/deploy).
 
 ## 10. Notas / armadilhas
+- **Env var nova/alterada na Netlify NÃO vale até um novo deploy** (Trigger deploy). Causou o 1º
+  login admin falhar. Depois do redeploy, **logout/login** no site para limpar o cache do `checkAdmin`.
+- `git`/`gh`/`netlify` CLIs: **só `git` está instalado** nesta máquina (gh e netlify-cli não). Deploy
+  e env vars foram feitos pela **UI web** da Netlify; `git push` rodou via terminal (Bash tool).
 - **Funções e login** só funcionam com `netlify dev` + envs ou após deploy (local dá 404 / o
   widget pede a URL do site Netlify).
 - O **preview MCP** estava preso a outro projeto e os **screenshots travam** (conexões de
