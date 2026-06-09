@@ -6,6 +6,29 @@ if (nav) {
   }, { passive: true });
 }
 
+// Menu hambúrguer (mobile)
+const navToggle = document.getElementById('nav-toggle');
+const navLinks = document.getElementById('nav-links');
+if (navToggle && navLinks) {
+  const setOpen = (open) => {
+    navLinks.classList.toggle('open', open);
+    navToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    navToggle.setAttribute('aria-label', open ? 'Fechar menu' : 'Abrir menu');
+  };
+  navToggle.addEventListener('click', () => {
+    setOpen(!navLinks.classList.contains('open'));
+  });
+  navLinks.querySelectorAll('a').forEach((a) => {
+    a.addEventListener('click', () => setOpen(false));
+  });
+  document.addEventListener('click', (e) => {
+    if (navLinks.classList.contains('open') && !nav.contains(e.target)) setOpen(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+}
+
 // Simple lightbox for gallery tiles
 document.querySelectorAll('.tile img').forEach((img) => {
   img.style.cursor = 'zoom-in';

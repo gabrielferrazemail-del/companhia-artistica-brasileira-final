@@ -1,6 +1,10 @@
 <header class="nav" id="site-nav">
   <a class="brand" href="/">{{ site.name }}</a>
-  <nav class="nav-links" aria-label="principal">
+  <button class="nav-toggle" id="nav-toggle" type="button" aria-label="Abrir menu"
+          aria-controls="nav-links" aria-expanded="false">
+    <span class="nav-toggle-bar" aria-hidden="true"></span>
+  </button>
+  <nav class="nav-links" id="nav-links" aria-label="principal">
     <a class="primary" href="/exposicoes/" {% if page.url.startsWith('/exposicoes') %}aria-current="page"{% endif %}>Exposições</a>
     <a href="/sobre/" {% if page.url == '/sobre/' %}aria-current="page"{% endif %}>Sobre</a>
     <a href="/contato/" {% if page.url == '/contato/' %}aria-current="page"{% endif %}>Contato</a>
