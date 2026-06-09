@@ -1,78 +1,104 @@
 ---
-title: "Delírios Anatômicos"
-slug: "delirios-anatomicos"
-status: "em-cartaz"
-cover: ""
-summary: "Vários artistas, um só corpo. Cada mão desenha uma parte — o todo só existe no encontro."
-start_date: 2026-06-13
-end_date: ""
+title: Delírios Anatômicos
+slug: delirios-anatomicos
+status: em-cartaz
+cover: ''
+summary: >-
+  Vários artistas, um só corpo. Cada mão desenha uma parte — o todo só existe no
+  encontro.
+start_date: 2026-06-13T00:00:00.000Z
+end_date: ''
 location:
-  name: "Galeria R. Monteiro"
-  address: ""
+  name: Galeria R. Monteiro
+  address: ''
 credits:
-  curator: "Carlos Henrique"
-  photography: "Fellipe Signorelli"
-theme: "delirios"
-influences: |
+  curator: Carlos Henrique
+  photography: Fellipe Signorelli
+theme: delirios
+influences: >
   Movimento que inspirou a exposição "Delírios Anatômicos".
 
-  O Exquisite Corpse (Cadavre Exquis) é uma prática artística coletiva criada na década de 1920 pelos artistas do Surrealismo, em Paris, dentro das experiências conduzidas pelo poeta e teórico André Breton. A proposta surgiu como um jogo criativo no qual várias pessoas produzem um desenho ou texto em sequência, sem ver completamente o que o participante anterior realizou. Cada artista continua apenas a partir de um pequeno fragmento visível, permitindo que o acaso, a imaginação e o inconsciente conduzam a criação.
 
-  O nome nasceu da primeira frase construída coletivamente pelos surrealistas — "Le cadavre exquis boira le vin nouveau" — e rapidamente se tornou um dos métodos mais emblemáticos do movimento, cujo objetivo era romper com a lógica racional e acessar camadas mais profundas da mente humana. No desenho, o procedimento costuma acontecer com o papel dobrado: um participante inicia a imagem, outro continua sem conhecer o todo, e assim sucessivamente, até que o trabalho seja revelado, resultando em figuras híbridas, inesperadas e poéticas.
+  O Exquisite Corpse (Cadavre Exquis) é uma prática artística coletiva criada na
+  década de 1920 pelos artistas do Surrealismo, em Paris, dentro das
+  experiências conduzidas pelo poeta e teórico André Breton. A proposta surgiu
+  como um jogo criativo no qual várias pessoas produzem um desenho ou texto em
+  sequência, sem ver completamente o que o participante anterior realizou. Cada
+  artista continua apenas a partir de um pequeno fragmento visível, permitindo
+  que o acaso, a imaginação e o inconsciente conduzam a criação.
 
-  A prática foi experimentada por importantes artistas surrealistas como Salvador Dalí, Max Ernst e Yves Tanguy, expandindo-se posteriormente para museus, escolas de arte e coletivos criativos ao redor do mundo. Hoje, o Exquisite Corpse permanece vivo na arte contemporânea, sendo utilizado em ateliês, práticas pedagógicas e processos colaborativos como uma ferramenta que valoriza a criação coletiva, o improviso e a liberdade imaginativa, reafirmando a ideia de que a obra de arte pode nascer do encontro entre diferentes sensibilidades e não apenas da autoria individual.
+
+  O nome nasceu da primeira frase construída coletivamente pelos surrealistas —
+  "Le cadavre exquis boira le vin nouveau" — e rapidamente se tornou um dos
+  métodos mais emblemáticos do movimento, cujo objetivo era romper com a lógica
+  racional e acessar camadas mais profundas da mente humana. No desenho, o
+  procedimento costuma acontecer com o papel dobrado: um participante inicia a
+  imagem, outro continua sem conhecer o todo, e assim sucessivamente, até que o
+  trabalho seja revelado, resultando em figuras híbridas, inesperadas e
+  poéticas.
+
+
+  A prática foi experimentada por importantes artistas surrealistas como
+  Salvador Dalí, Max Ernst e Yves Tanguy, expandindo-se posteriormente para
+  museus, escolas de arte e coletivos criativos ao redor do mundo. Hoje, o
+  Exquisite Corpse permanece vivo na arte contemporânea, sendo utilizado em
+  ateliês, práticas pedagógicas e processos colaborativos como uma ferramenta
+  que valoriza a criação coletiva, o improviso e a liberdade imaginativa,
+  reafirmando a ideia de que a obra de arte pode nascer do encontro entre
+  diferentes sensibilidades e não apenas da autoria individual.
 gallery:
-  - image: "/uploads/exposicoes/delirios-anatomicos/registro-01.svg"
-    alt: "Registro da montagem de Delírios Anatômicos"
-    caption: "Registro da montagem"
-    credit: "Fellipe Signorelli"
-  - image: "/uploads/exposicoes/delirios-anatomicos/registro-02.svg"
-    alt: "Vista da galeria durante a exposição"
-    caption: "Vista da galeria"
-    credit: "Fellipe Signorelli"
-  - image: "/uploads/exposicoes/delirios-anatomicos/registro-03.svg"
-    alt: "Detalhe das obras em exposição"
-    caption: "Detalhe das obras"
-    credit: "Fellipe Signorelli"
+  - image: /uploads/exposicoes/delirios-anatomicos/registro-01.svg
+    alt: Registro da montagem de Delírios Anatômicos
+    caption: Registro da montagem
+    credit: Fellipe Signorelli
+  - image: /uploads/exposicoes/delirios-anatomicos/registro-02.svg
+    alt: Vista da galeria durante a exposição
+    caption: Vista da galeria
+    credit: Fellipe Signorelli
+  - image: /uploads/exposicoes/delirios-anatomicos/registro-03.svg
+    alt: Detalhe das obras em exposição
+    caption: Detalhe das obras
+    credit: Fellipe Signorelli
 participations:
-  - artist: "allan-silva"
+  - artist: allan-silva
     works: []
-  - artist: "carlos-henrique"
+  - artist: carlos-henrique
     works: []
-  - artist: "gustavo-venancio"
+  - artist: gustavo-venancio
     works: []
-  - artist: "moises-souza"
+  - artist: moises-souza
     works: []
-  - artist: "pompeu"
+  - artist: pompeu
     works: []
-  - artist: "sophia-contrucci"
+  - artist: sophia-contrucci
     works: []
-  - artist: "weslley-ferrari-tattoo"
+  - artist: weslley-ferrari-tattoo
     works: []
-  - artist: "7416"
+  - artist: '7416'
     works: []
-  - artist: "bruna-estrela"
+  - artist: bruna-estrela
     works: []
-  - artist: "gabriel-ferraz"
+  - artist: gabriel-ferraz
     works: []
-  - artist: "sirinalata"
+  - artist: sirinalata
     works: []
-  - artist: "thais-vazquez"
+  - artist: thais-vazquez
     works: []
-  - artist: "tiago-zuchna"
+  - artist: tiago-zuchna
     works: []
-  - artist: "ana-laura-mazalli"
+  - artist: ana-laura-mazalli
     works: []
-  - artist: "catarina-ortiz"
+  - artist: catarina-ortiz
     works: []
-  - artist: "kiko-farroni"
+  - artist: kiko-farroni
     works: []
-  - artist: "maria-boniatti"
+  - artist: maria-boniatti
     works: []
-  - artist: "maria-figueiredo"
+  - artist: maria-figueiredo
     works: []
-  - artist: "ohara"
+  - artist: ohara
     works: []
+order: 1
 ---
 O propósito da exposição é refletir que uma unidade não nasce da imposição, mas do coração transformado. Diferentes identidades chamadas a viver em concordância, com um sentimento uníssono, abandonando o orgulho e inclinando-se à humildade, pois a verdadeira comunhão não se sustenta na superioridade de uns sobre outros, mas na disposição sincera de caminhar lado a lado, reconhecendo que todos dependem igualmente da Arte.
 
