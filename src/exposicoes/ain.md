@@ -13,10 +13,14 @@ credits:
   curator: dog
   photography: ''
 theme: default
-influences: ''
-gallery: []
+influences: ohhpobiubiuviyvkyu
+gallery:
+  - image: /uploads/exposicoes/ain/g1-1781046919353-1.jpg
+    alt: ihoho
+    caption: uhu;obiu;
+    credit: huibubiu
 participations: []
 order: 2
 ---
 
-
+biupbiupbiubibiy
