@@ -1,7 +1,7 @@
 # HANDOFF — Site do coletivo (Companhia Artística Brasileira)
 
 Documento de transferência. Resume o estado completo do projeto para continuar em outra sessão.
-_Última atualização: 2026-06-06 (já PUBLICADO na Netlify; ver §0)._
+_Última atualização: 2026-06-09 (login reconstruído + nova home "capa" + testes; ver §0 e §11)._
 
 ## 0. Estado de produção (AO VIVO)
 - **Site no ar:** https://coletivosite.netlify.app/
@@ -12,12 +12,10 @@ _Última atualização: 2026-06-06 (já PUBLICADO na Netlify; ver §0)._
 - **Identity:** habilitado, **invite only**.
 - **Env vars na Netlify:** `GITHUB_TOKEN` (PAT fine-grained, Contents R/W), `GITHUB_REPO`
   (`gabrielferrazemail-del/companhia-artistica-brasileira-final`), `GITHUB_BRANCH` (`main`), `ADMIN_EMAILS`.
-- ⚠️ **PENDÊNCIA EM ANDAMENTO:** login funciona, mas no 1º teste o usuário entrou **sem** virar admin
-  porque **as env vars foram adicionadas SEM acionar um novo deploy** (na Netlify, env var só vale após
-  *Trigger deploy*). Correção pendente: conferir `ADMIN_EMAILS` = `gabriel.ferraz.email@gmail.com`
-  (exato) → **Deploys → Trigger deploy** → no site **Sair e entrar de novo** (limpa cache de
-  `checkAdmin`) → abrir `/painel/`.
-- 🔐 O usuário colou a **senha** dele no chat numa sessão — **orientado a trocá-la**. Nunca pedir senha.
+- ✅ **LOGIN ADMIN OK (2026-06-09):** usuário confirmou que loga e acessa o painel como admin.
+  O fluxo de login foi **reconstruído** nesta sessão (fonte da verdade = `whoami`; roteamento por
+  papel; ver §11). Gotcha histórico mantido: env var nova na Netlify só vale após *Trigger deploy*.
+- 🔐 O usuário colou a **senha** dele no chat numa sessão antiga — **orientado a trocá-la**. Nunca pedir senha.
 
 ## 1. Visão geral
 
@@ -169,7 +167,8 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
 7. (Opcional) Apontar domínio (Registro.br → DNS Netlify).
 
 ## 7. ⚠️ Pendências (conteúdo a trocar — placeholders)
-- **[EM ANDAMENTO] Login admin:** resolver o redeploy das env vars (ver §0).
+- **[RESOLVIDO 2026-06-09] Login admin:** funciona (ver §0/§11). Pendência atual: **subir a imagem/gif
+  da capa** da home no painel (Configurações avançadas → "Página inicial (capa)").
 - `src/_data/site.json`: **Instagram** = `https://instagram.com/` (genérico) e **e-mail** =
   `contato@coletivo.com.br` são placeholders → trocar pelos reais (**painel → Contatos**, atalho novo).
 - **Galeria do Delírios:** 3 SVGs placeholder em `src/uploads/exposicoes/delirios-anatomicos/` →
@@ -211,3 +210,65 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
   live-reload empilhadas); verificação confiável por DOM (`preview_eval`) e varredura de arquivos.
 - Eleventy `--watch` às vezes não pega ARQUIVO NOVO; ao criar template novo, reiniciar o serve.
 - O texto curatorial e o de "Influências" do Delírios já estão definitivos (fornecidos pelo usuário).
+
+## 11. Mudanças da sessão 2026-06-09
+
+### Correções de bugs (UI + auth)
+- **Nav mobile:** Sobre/Contato sumiam em ≤640px (regra `a:not(.primary){display:none}`).
+  Substituído por **menu hambúrguer** (`#nav-toggle` em `nav.njk`; CSS `.nav-toggle`/dropdown em
+  `styles.css`; toggle em `main.js`: abre/fecha por clique, link, clique fora, Esc).
+- **`[hidden]` ignorado:** `.btn-primary{display:inline-block}` e `.auth-actions{display:flex}`
+  venciam o `[hidden]` do user-agent → botões de logado vazavam deslogado na `/entrar/`. Corrigido
+  com regra global **`[hidden]{display:none!important}`** em `styles.css`.
+
+### Login reconstruído (Netlify Identity mantido; fonte da verdade = `whoami`)
+- **`identity.js` reescrito** como controlador único: busca `whoami` 1x e cacheia
+  `{loggedIn, admin, artistSlug}` (limpa no logout); visibilidade por papel via
+  **`[data-only-admin]`** (admin) e **`[data-only-artist]`** (tem artistSlug); eventos
+  `identity:ready|login|logout` passam `detail.{user, role, whoami}`. API mantida
+  (`current/token/authFetch/checkAdmin`) + novos `whoami()` e `role()`.
+- **`entrar.njk`** simplificado (estado deslogado = só botão login; estado logado = ações por papel).
+- **`entrar.js` (novo, incluído só em `/entrar/` via `base.njk`):** roteamento pós-login →
+  admin vai para `/painel/`, artista para `/minha-conta/`, sem papel fica na `/entrar/` com aviso.
+- **`nav.njk`:** "Minha conta" agora é `data-only-artist`; "Painel" segue `data-only-admin`.
+- **`minha-conta.js`:** libera o formulário pelo **`whoami().artistSlug`** (servidor), não mais por
+  `user_metadata.artist_slug` — corrige artista vinculado **por e-mail** que via "conta não vinculada".
+- **`whoami.js`:** calcula `admin` **antes** do early-return de `configured()` (admin não depende mais
+  de GITHUB_* estar setado).
+- **`utils/github.js → isAdmin`:** comparação de e-mail **case-insensitive + trim** (ADMIN_EMAILS).
+
+### Nova homepage = "capa" (estilo Hauser & Wirth)
+- **`index.njk`** virou **só a capa**: imagem/gif em tela cheia + botão central → `/exposicoes/`.
+  Removidos os blocos "exposição em destaque" e "anteriores". Funciona sem imagem (fundo neutro).
+- CSS `.home-cover*` em `styles.css` (object-fit cover, overlay p/ legibilidade, botão hover invertido).
+- **Dado novo em `site.json`:** `home_hero { image, heading, subheading, cta_label }`. Botão sempre
+  → `/exposicoes/` (fixo no template); só o rótulo/textos são editáveis.
+- **Editável no painel:** `painel-configuracoes.njk` + `.js` ganharam a seção **"Página inicial (capa)"**
+  (upload de imagem/gif + título/subtítulo/texto do botão), reusando `setupImage`.
+- **`save-site.js`** persiste `home_hero` usando o helper `resolveImage` (commit em `src/uploads/site/`).
+
+### Foto de perfil do artista
+- **Já existia ponta-a-ponta** (campo em `minha-conta.njk` → `update-profile.js` commita em
+  `src/uploads/artistas/<slug>-<ts>.<ext>` → renderiza em `artista.njk`). Não aparecia só por causa do
+  bug "conta não vinculada", agora corrigido. **Confirmado ao vivo** (commit `Atualiza artista: 7416`).
+
+### Testes (novos)
+- **Unit (`node:test`, sem deps):** `npm test` → `test/unit/` cobre `isAdmin` (role + e-mail
+  case-insensitive) e `utils/site-helpers.js` (`clean`, `extFromUpload`). **15 testes.**
+- **DRY:** `clean`/`extFromUpload` (duplicados em `save-site.js` e `update-profile.js`) extraídos
+  para **`netlify/functions/utils/site-helpers.js`**; ambas as functions agora o importam.
+- **E2E (Playwright/chromium):** `npm run test:e2e` → `test/e2e/` cobre capa+CTA, `/entrar/` deslogado
+  e nav mobile. **7 testes.** Config `playwright.config.js` (reusa `eleventy --serve` na 8080).
+  `package.json` ganhou scripts `test`/`test:e2e` + devDep `@playwright/test`; `.gitignore` ignora
+  `test-results/` e `playwright-report/`.
+
+### Commits (no `main`, já no ar)
+- `fix: nav mobile, estado de login e deteccao de admin`
+- `feat: reconstroi fluxo de login com roteamento por papel`
+- `feat: homepage em capa de tela cheia editavel no painel`
+- `test: add node:test unit suite (isAdmin + site-helpers)`
+- `test: add Playwright e2e for home cover, login, mobile nav`
+
+### Pendência aberta
+- **Subir a imagem/gif da capa** no painel (hoje a home mostra fundo neutro — sem imagem ainda).
+  Painel → Configurações avançadas → "Página inicial (capa)" → upload → Salvar.
