@@ -11,9 +11,11 @@
     seoTitle: $("#c-seo-title"), seoDesc: $("#c-seo-desc"),
     logo: $("#c-logo"), logoPreview: $("#c-logo-preview"), logoClear: $("#c-logo-clear"),
     og: $("#c-og"), ogPreview: $("#c-og-preview"), ogClear: $("#c-og-clear"),
+    hero: $("#c-hero"), heroPreview: $("#c-hero-preview"), heroClear: $("#c-hero-clear"),
+    heroHeading: $("#c-hero-heading"), heroSub: $("#c-hero-sub"), heroCta: $("#c-hero-cta"),
     saveBtn: $("#c-save"), status: $("#cfg-status"), tplSocial: $("#tpl-social"),
   };
-  const state = { logo: "", shareImage: "" };
+  const state = { logo: "", shareImage: "", heroImage: "" };
 
   function showOnly(node) {
     [els.guest, els.noadmin, els.error, els.form].forEach((n) => { if (n) n.hidden = true; });
@@ -68,6 +70,12 @@
     if (state.logo) { els.logoPreview.src = state.logo; els.logoPreview.hidden = false; els.logoClear.hidden = false; }
     state.shareImage = (d.seo && d.seo.shareImage) || "";
     if (state.shareImage) { els.ogPreview.src = state.shareImage; els.ogPreview.hidden = false; els.ogClear.hidden = false; }
+    const hero = d.home_hero || {};
+    els.heroHeading.value = hero.heading || "";
+    els.heroSub.value = hero.subheading || "";
+    els.heroCta.value = hero.cta_label || "";
+    state.heroImage = hero.image || "";
+    if (state.heroImage) { els.heroPreview.src = state.heroImage; els.heroPreview.hidden = false; els.heroClear.hidden = false; }
   }
 
   function collect() {
@@ -76,6 +84,12 @@
       tagline: els.tagline.value.trim(),
       about: els.about.value,
       logo: state.logo,
+      home_hero: {
+        image: state.heroImage,
+        heading: els.heroHeading.value.trim(),
+        subheading: els.heroSub.value.trim(),
+        cta_label: els.heroCta.value.trim(),
+      },
       contact: { email: els.email.value.trim(), whatsapp: els.whatsapp.value.trim() },
       social: collectSocial(),
       seo: {
@@ -107,6 +121,7 @@
     els.form.addEventListener("submit", onSubmit);
     setupImage(els.logo, els.logoPreview, els.logoClear, "logo");
     setupImage(els.og, els.ogPreview, els.ogClear, "shareImage");
+    setupImage(els.hero, els.heroPreview, els.heroClear, "heroImage");
   }
 
   async function startCfg() {

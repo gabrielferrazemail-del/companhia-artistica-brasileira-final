@@ -3,6 +3,7 @@
   "tagline": "Arte coletiva — São Paulo",
   "about": "Companhia Artística Brasileira — coletivo de arte de São Paulo.",
   "logo": "",
+  "home_hero": { "image": "", "heading": "", "subheading": "", "cta_label": "Ver exposições" },
   "contact": { "email": "contato@coletivo.com.br", "whatsapp": "" },
   "social": [
     { "platform": "Instagram", "url": "https://instagram.com/" }

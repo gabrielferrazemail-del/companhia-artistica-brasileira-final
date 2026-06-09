@@ -47,6 +47,12 @@ exports.handler = async (event, context) => {
       tagline: clean(p.tagline, 200),
       about: clean(p.about, 4000),
       logo: resolveImage(p.logo, "logo"),
+      home_hero: {
+        image: resolveImage(p.home_hero && p.home_hero.image, "hero"),
+        heading: clean(p.home_hero && p.home_hero.heading, 160),
+        subheading: clean(p.home_hero && p.home_hero.subheading, 200),
+        cta_label: clean(p.home_hero && p.home_hero.cta_label, 60) || "Ver exposições",
+      },
       contact: {
         email: clean(p.contact && p.contact.email, 160),
         whatsapp: clean(p.contact && p.contact.whatsapp, 60),

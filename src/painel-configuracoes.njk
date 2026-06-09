@@ -46,6 +46,31 @@ permalink: /painel/configuracoes/index.html
       </div>
     </div>
 
+    <h2 class="section-title" style="font-size:18px;margin-top:8px">Página inicial (capa)</h2>
+    <div class="field">
+      <label>Imagem ou GIF de fundo</label>
+      <div class="photo-row">
+        <img id="c-hero-preview" alt="Capa da página inicial" hidden>
+        <input id="c-hero" type="file" accept="image/*,image/gif">
+        <button type="button" class="btn-ghost btn-sm" id="c-hero-clear" hidden>Remover</button>
+      </div>
+      <p class="field-hint">Aparece em tela cheia na página inicial, com um botão central que leva às exposições. GIF anima normalmente.</p>
+    </div>
+    <div class="form-grid">
+      <div class="field">
+        <label for="c-hero-heading">Título sobre a imagem (opcional)</label>
+        <input id="c-hero-heading" type="text">
+      </div>
+      <div class="field">
+        <label for="c-hero-cta">Texto do botão</label>
+        <input id="c-hero-cta" type="text" placeholder="Ver exposições">
+      </div>
+    </div>
+    <div class="field">
+      <label for="c-hero-sub">Subtítulo (opcional)</label>
+      <input id="c-hero-sub" type="text">
+    </div>
+
     <div class="form-grid">
       <div class="field">
         <label for="c-email">E-mail de contato</label>

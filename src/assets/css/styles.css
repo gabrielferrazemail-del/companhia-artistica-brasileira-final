@@ -399,6 +399,70 @@ img { max-width: 100%; display: block; }
 .artists a:hover { color: var(--ac, var(--accent)); }
 .artists a:hover::after { transform: scaleX(1); }
 
+/* ========== Home cover (capa em tela cheia) ========== */
+.home-cover {
+  position: relative;
+  min-height: 88vh;
+  min-height: calc(100svh - 72px);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--bg-3);
+}
+.home-cover-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.home-cover-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .5));
+}
+.home-cover-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 18px;
+  padding: 24px;
+  color: #fff;
+}
+.home-cover-title {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-weight: 600;
+  line-height: .9;
+  font-size: clamp(40px, 9vw, 120px);
+  text-shadow: 0 2px 28px rgba(0, 0, 0, .45);
+}
+.home-cover-sub {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: clamp(12px, 1.4vw, 15px);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, .5);
+}
+.home-cover-cta {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 15px 36px;
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid #fff;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .16em;
+  text-decoration: none;
+  transition: background .25s, color .25s;
+}
+.home-cover-cta:hover { background: #fff; color: var(--text); }
+
 /* ========== Home ========== */
 .home-hero {
   padding: clamp(48px, 8vw, 96px) clamp(20px, 5vw, 56px);
