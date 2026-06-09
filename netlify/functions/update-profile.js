@@ -9,12 +9,7 @@
  *  - campos editáveis: name, tagline, photo (upload), links, bio.
  */
 const gh = require("./utils/github");
-
-function clean(str, max) {
-  if (typeof str !== "string") return "";
-  const s = str.trim();
-  return max ? s.slice(0, max) : s;
-}
+const { clean, extFromUpload } = require("./utils/site-helpers");
 
 function cleanLinks(links) {
   if (!Array.isArray(links)) return [];
@@ -23,13 +18,6 @@ function cleanLinks(links) {
     .filter((l) => l.type || l.url)
     .filter((l) => !l.url || /^https?:\/\//i.test(l.url))
     .slice(0, 12);
-}
-
-function extFromUpload(up) {
-  const fromName = (up.name || "").split(".").pop().toLowerCase();
-  if (/^(jpg|jpeg|png|webp|gif|svg)$/.test(fromName)) return fromName === "jpeg" ? "jpg" : fromName;
-  const map = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/svg+xml": "svg" };
-  return map[up.type] || "jpg";
 }
 
 exports.handler = async (event, context) => {
@@ -59,7 +47,7 @@ exports.handler = async (event, context) => {
     // Foto: upload se enviada, senão mantém a atual.
     let photoPath = current.photo || "";
     if (payload.photoUpload && payload.photoUpload.dataBase64) {
-      const ext = extFromUpload(payload.photoUpload);
+      const ext = extFromUpload(payload.photoUpload, "jpg");
       const photoRepoPath = "src/uploads/artistas/" + slug + "-" + Date.now() + "." + ext;
       files.push({ path: photoRepoPath, contentBase64: payload.photoUpload.dataBase64 });
       photoPath = "/" + photoRepoPath.replace(/^src\//, "");

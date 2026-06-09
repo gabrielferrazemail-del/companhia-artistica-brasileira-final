@@ -2,18 +2,7 @@
 // Body: { name, tagline, about, logo, contact{email,whatsapp}, social[], seo{...} }
 // logo e seo.shareImage: string (caminho) ou { dataBase64, name, type } (upload novo).
 const gh = require("./utils/github");
-
-function clean(s, max) {
-  if (typeof s !== "string") return "";
-  const t = s.trim();
-  return max ? t.slice(0, max) : t;
-}
-function extFromUpload(up) {
-  const byName = (up.name || "").split(".").pop().toLowerCase();
-  if (/^(jpg|jpeg|png|webp|gif|svg)$/.test(byName)) return byName === "jpeg" ? "jpg" : byName;
-  const map = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/svg+xml": "svg" };
-  return map[up.type] || "png";
-}
+const { clean, extFromUpload } = require("./utils/site-helpers");
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") return gh.text(405, "Método não permitido.");

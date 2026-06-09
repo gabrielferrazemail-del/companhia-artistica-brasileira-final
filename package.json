@@ -5,11 +5,16 @@
   "scripts": {
     "build": "eleventy",
     "start": "eleventy --serve",
-    "dev": "eleventy --serve --watch"
+    "dev": "eleventy --serve --watch",
+    "test": "node --test test/unit/",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@11ty/eleventy": "^3.0.0",
     "@11ty/eleventy-img": "^5.0.0",
     "gray-matter": "^4.0.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
   }
 }
