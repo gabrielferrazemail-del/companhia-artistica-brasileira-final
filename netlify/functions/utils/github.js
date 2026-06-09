@@ -41,8 +41,10 @@ function isAdmin(user) {
   if (!user) return false;
   const roles = (user.app_metadata && user.app_metadata.roles) || [];
   if (roles.indexOf("admin") !== -1) return true;
-  const adminEmails = (process.env.ADMIN_EMAILS || "").split(",").map((s) => s.trim()).filter(Boolean);
-  const email = user.email || (user.user_metadata && user.user_metadata.email) || "";
+  // Comparação de e-mail case-insensitive (evita falha boba de configuração).
+  const adminEmails = (process.env.ADMIN_EMAILS || "")
+    .split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+  const email = (user.email || (user.user_metadata && user.user_metadata.email) || "").trim().toLowerCase();
   return !!(email && adminEmails.indexOf(email) !== -1);
 }
 

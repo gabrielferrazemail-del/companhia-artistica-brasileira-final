@@ -164,11 +164,12 @@
   }
 
   let resolved = false;
-  function start(user) {
+  async function start(user) {
     resolved = true;
     if (!user) { showOnly(els.guest); els.sub.textContent = ""; return; }
-    const slug = user.user_metadata && user.user_metadata.artist_slug;
-    if (!slug) { showOnly(els.noslug); els.sub.textContent = ""; return; }
+    // Slug vem do servidor (whoami), que deriva por e-mail no .md — não de user_metadata.
+    const { artistSlug } = await window.coletivoAuth.whoami();
+    if (!artistSlug) { showOnly(els.noslug); els.sub.textContent = ""; return; }
     loadProfile();
   }
 

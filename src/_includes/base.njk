@@ -45,6 +45,9 @@
   <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script src="/assets/js/identity.js" defer></script>
   <script src="/assets/js/main.js" defer></script>
+  {% if page.url == "/entrar/" %}
+  <script src="/assets/js/entrar.js" defer></script>
+  {% endif %}
   {% if page.url == "/minha-conta/" %}
   <script src="/assets/js/minha-conta.js" defer></script>
   {% endif %}
