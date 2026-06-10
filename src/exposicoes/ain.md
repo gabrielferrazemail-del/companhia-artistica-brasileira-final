@@ -27,6 +27,18 @@ gallery:
     alt: buobuobj
     caption: bjbkjbkjl
     credit: njbjbj
+  - image: /uploads/exposicoes/ain/g4-1781061161759-1.jpg
+    alt: fghdjfghdj
+    caption: dfghjfghdj
+    credit: fgdhfgh
+  - image: /uploads/exposicoes/ain/g5-1781061161759-2.jpg
+    alt: tia da pinga
+    caption: assustador
+    credit: tigas
+  - image: /uploads/exposicoes/ain/g6-1781061161759-3.jpg
+    alt: ghjffghj
+    caption: bgvhnfcbnvc
+    credit: fghgfh
 participations: []
 order: 2
 ---
