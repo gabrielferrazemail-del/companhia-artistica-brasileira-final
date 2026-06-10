@@ -2,7 +2,7 @@
 title: Delírios Anatômicos
 slug: delirios-anatomicos
 status: em-cartaz
-cover: /uploads/exposicoes/delirios-anatomicos/capa-1781061540400-1.jpg
+cover: /uploads/exposicoes/delirios-anatomicos/capa-1781061938578-1.webp
 summary: >-
   Vários artistas, um só corpo. Cada mão desenha uma parte — o todo só existe no
   encontro.
