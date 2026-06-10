@@ -2,7 +2,7 @@
 title: teste
 slug: ain
 status: em-cartaz
-cover: ''
+cover: /uploads/exposicoes/ain/capa-1781061364057-1.jpg
 summary: dfgnffnhdfnh
 start_date: '2027-09-01'
 end_date: ''
