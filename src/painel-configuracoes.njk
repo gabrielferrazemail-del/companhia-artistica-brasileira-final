@@ -40,7 +40,9 @@ permalink: /painel/configuracoes/index.html
     <div class="field">
       <label>Logo</label>
       <div class="photo-row">
-        <img id="c-logo-preview" alt="Logo" hidden>
+        <span class="img-frame img-frame--logo" data-label="sem corte">
+          <img id="c-logo-preview" alt="Logo" hidden>
+        </span>
         <input id="c-logo" type="file" accept="image/*">
         <button type="button" class="btn-ghost btn-sm" id="c-logo-clear" hidden>Remover</button>
       </div>
@@ -50,11 +52,13 @@ permalink: /painel/configuracoes/index.html
     <div class="field">
       <label>Imagem ou GIF de fundo</label>
       <div class="photo-row">
-        <img id="c-hero-preview" alt="Capa da página inicial" hidden>
+        <span class="img-frame img-frame--hero" data-label="16:9 · tela cheia">
+          <img id="c-hero-preview" alt="Capa da página inicial" hidden>
+        </span>
         <input id="c-hero" type="file" accept="image/*,image/gif">
         <button type="button" class="btn-ghost btn-sm" id="c-hero-clear" hidden>Remover</button>
       </div>
-      <p class="field-hint">Aparece em tela cheia na página inicial, com um botão central que leva às exposições. GIF anima normalmente.</p>
+      <p class="field-hint">Aparece em tela cheia na página inicial, com um botão central que leva às exposições. A moldura mostra o corte aproximado em desktop (varia com o tamanho da tela). GIF anima normalmente.</p>
     </div>
     <div class="form-grid">
       <div class="field">
@@ -97,7 +101,9 @@ permalink: /painel/configuracoes/index.html
       <div class="field">
         <label>Imagem de compartilhamento (OG)</label>
         <div class="photo-row">
-          <img id="c-og-preview" alt="OG" hidden>
+          <span class="img-frame img-frame--og" data-label="1200×630">
+            <img id="c-og-preview" alt="OG" hidden>
+          </span>
           <input id="c-og" type="file" accept="image/*">
           <button type="button" class="btn-ghost btn-sm" id="c-og-clear" hidden>Remover</button>
         </div>

@@ -24,7 +24,8 @@
     viewLink: $("#view-link"),
   };
 
-  let pendingPhoto = null; // { name, type, dataBase64 }
+  let pendingPhoto = null; // { blobSha, name, type }
+  let uploadPending = false;
 
   function showOnly(node) {
     [els.guest, els.noslug, els.error, els.form].forEach((n) => { if (n) n.hidden = true; });
@@ -73,19 +74,6 @@
     }
   }
 
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = String(reader.result);
-        const comma = result.indexOf(",");
-        resolve(comma >= 0 ? result.slice(comma + 1) : result);
-      };
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
-
   async function authFetch(path, options) {
     const token = await window.coletivoAuth.token();
     options = options || {};
@@ -114,6 +102,7 @@
 
   async function onSubmit(e) {
     e.preventDefault();
+    if (uploadPending) { els.saveStatus.textContent = "Aguarde o envio da foto…"; return; }
     if (!els.name.value.trim()) { els.name.focus(); return; }
 
     els.saveBtn.disabled = true;
@@ -127,7 +116,7 @@
         links: collectLinks(),
       };
       if (pendingPhoto) {
-        payload.photoUpload = pendingPhoto; // { name, type, dataBase64 }
+        payload.photoUpload = pendingPhoto; // { blobSha, name, type }
       }
 
       const res = await authFetch("/.netlify/functions/update-profile", {
@@ -156,10 +145,19 @@
     els.photo.addEventListener("change", async () => {
       const file = els.photo.files && els.photo.files[0];
       if (!file) { pendingPhoto = null; return; }
-      const dataBase64 = await readFileAsBase64(file);
-      pendingPhoto = { name: file.name, type: file.type, dataBase64: dataBase64 };
-      els.photoPreview.src = URL.createObjectURL(file);
-      els.photoPreview.hidden = false;
+      uploadPending = true;
+      els.saveBtn.disabled = true; els.saveStatus.textContent = "Enviando foto…";
+      try {
+        pendingPhoto = await window.coletivoUpload.uploadImage(file);
+        els.photoPreview.src = URL.createObjectURL(file);
+        els.photoPreview.hidden = false;
+        els.saveStatus.textContent = "";
+      } catch (err) {
+        pendingPhoto = null; els.photo.value = "";
+        els.saveStatus.textContent = "Erro no upload: " + (err.message || "");
+      }
+      uploadPending = false;
+      els.saveBtn.disabled = false;
     });
   }
 

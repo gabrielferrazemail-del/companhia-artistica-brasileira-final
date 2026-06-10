@@ -21,13 +21,6 @@
     [els.guest, els.noadmin, els.error, els.form].forEach((n) => { if (n) n.hidden = true; });
     if (node) node.hidden = false;
   }
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => { const s = String(r.result); const c = s.indexOf(","); resolve(c >= 0 ? s.slice(c + 1) : s); };
-      r.onerror = reject; r.readAsDataURL(file);
-    });
-  }
   function addSocial(item) {
     item = item || {};
     const node = els.tplSocial.content.firstElementChild.cloneNode(true);
@@ -42,12 +35,25 @@
     })).filter((s) => s.platform || s.url);
   }
 
+  // Upload imediato via window.coletivoUpload (1 imagem por request; GIF passa intacto).
+  let uploadsPending = 0;
   function setupImage(fileEl, previewEl, clearEl, key) {
     fileEl.addEventListener("change", async () => {
       const f = fileEl.files && fileEl.files[0];
       if (!f) return;
-      state[key] = { dataBase64: await readFileAsBase64(f), name: f.name, type: f.type };
-      previewEl.src = URL.createObjectURL(f); previewEl.hidden = false; clearEl.hidden = false;
+      uploadsPending += 1;
+      els.saveBtn.disabled = true; els.status.textContent = "Enviando imagem…";
+      try {
+        state[key] = await window.coletivoUpload.uploadImage(f);
+        previewEl.src = URL.createObjectURL(f); previewEl.hidden = false; clearEl.hidden = false;
+        if (els.status.textContent === "Enviando imagem…") els.status.textContent = "";
+      } catch (err) {
+        fileEl.value = "";
+        els.status.textContent = "Erro no upload: " + (err.message || "");
+      } finally {
+        uploadsPending -= 1;
+        if (!uploadsPending) els.saveBtn.disabled = false;
+      }
     });
     clearEl.addEventListener("click", () => {
       state[key] = ""; fileEl.value = ""; previewEl.hidden = true; clearEl.hidden = true;
@@ -102,6 +108,7 @@
 
   async function onSubmit(e) {
     e.preventDefault();
+    if (uploadsPending) { els.status.textContent = "Aguarde o envio das imagens…"; return; }
     if (!els.name.value.trim()) { els.name.focus(); return; }
     els.saveBtn.disabled = true; els.status.textContent = "Salvando…";
     try {

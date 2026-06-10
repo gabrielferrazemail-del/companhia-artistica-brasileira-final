@@ -2,18 +2,7 @@
 // Cria/edita src/artistas/<slug>.md (um commit), com upload de foto.
 // Body: { data: { name, slug, photo, tagline, roles[], links[] }, body, originalSlug? }
 const gh = require("./utils/github");
-
-function clean(s, max) {
-  if (typeof s !== "string") return "";
-  const t = s.trim();
-  return max ? t.slice(0, max) : t;
-}
-function extFromUpload(up) {
-  const byName = (up.name || "").split(".").pop().toLowerCase();
-  if (/^(jpg|jpeg|png|webp|gif|svg)$/.test(byName)) return byName === "jpeg" ? "jpg" : byName;
-  const map = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/svg+xml": "svg" };
-  return map[up.type] || "jpg";
-}
+const { clean, extFromUpload, isUpload, uploadFileEntry } = require("./utils/site-helpers");
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") return gh.text(405, "Método não permitido.");
@@ -34,10 +23,10 @@ exports.handler = async (event, context) => {
   const photo = data.photo;
   if (typeof photo === "string") {
     photoPath = photo;
-  } else if (photo && photo.dataBase64) {
-    const ext = extFromUpload(photo);
+  } else if (isUpload(photo)) {
+    const ext = extFromUpload(photo, "jpg");
     const repoPath = "src/uploads/artistas/" + slug + "-" + Date.now() + "." + ext;
-    files.push({ path: repoPath, contentBase64: photo.dataBase64 });
+    files.push(uploadFileEntry(photo, repoPath));
     photoPath = "/" + repoPath.replace(/^src\//, "");
   }
 

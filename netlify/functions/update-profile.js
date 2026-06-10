@@ -9,7 +9,7 @@
  *  - campos editáveis: name, tagline, photo (upload), links, bio.
  */
 const gh = require("./utils/github");
-const { clean, extFromUpload } = require("./utils/site-helpers");
+const { clean, extFromUpload, isUpload, uploadFileEntry } = require("./utils/site-helpers");
 
 function cleanLinks(links) {
   if (!Array.isArray(links)) return [];
@@ -44,12 +44,12 @@ exports.handler = async (event, context) => {
 
     const files = [];
 
-    // Foto: upload se enviada, senão mantém a atual.
+    // Foto: upload se enviada ({ blobSha } ou { dataBase64 }), senão mantém a atual.
     let photoPath = current.photo || "";
-    if (payload.photoUpload && payload.photoUpload.dataBase64) {
+    if (isUpload(payload.photoUpload)) {
       const ext = extFromUpload(payload.photoUpload, "jpg");
       const photoRepoPath = "src/uploads/artistas/" + slug + "-" + Date.now() + "." + ext;
-      files.push({ path: photoRepoPath, contentBase64: payload.photoUpload.dataBase64 });
+      files.push(uploadFileEntry(payload.photoUpload, photoRepoPath));
       photoPath = "/" + photoRepoPath.replace(/^src\//, "");
     }
 

@@ -48,7 +48,7 @@ layout: base.njk
         {% for work in group.works %}
         <figure class="tile">
           {% if work.image %}
-          <img src="{{ work.image }}" alt="{{ work.title or name }}" loading="lazy">
+          <img src="{{ work.image }}" alt="{{ work.title or name }}" data-caption="{{ work.title or '' }}" data-desc="{{ work.description or '' }}{% if work.technique %}{% if work.description %} · {% endif %}{{ work.technique }}{% endif %}{% if work.dimensions %} · {{ work.dimensions }}{% endif %}" loading="lazy">
           {% endif %}
           {% if work.title or work.technique %}
           <figcaption class="tile-caption">

@@ -4,21 +4,10 @@
 //
 // Body: { data: {...frontmatter...}, body: "markdown", originalSlug?: "..." }
 // Em data, cada campo de imagem é uma STRING (caminho existente) ou um objeto
-// { dataBase64, name, type } (upload novo).
+// { blobSha, name, type } (upload feito antes via upload-image) —
+// { dataBase64, name, type } segue aceito por compatibilidade.
 const gh = require("./utils/github");
-
-function clean(s, max) {
-  if (typeof s !== "string") return "";
-  const t = s.trim();
-  return max ? t.slice(0, max) : t;
-}
-
-function extFromUpload(up) {
-  const byName = (up.name || "").split(".").pop().toLowerCase();
-  if (/^(jpg|jpeg|png|webp|gif|svg)$/.test(byName)) return byName === "jpeg" ? "jpg" : byName;
-  const map = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif", "image/svg+xml": "svg" };
-  return map[up.type] || "jpg";
-}
+const { clean, extFromUpload, uploadFileEntry } = require("./utils/site-helpers");
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") return gh.text(405, "Método não permitido.");
@@ -41,14 +30,13 @@ exports.handler = async (event, context) => {
   function resolveImage(val, prefix) {
     if (!val) return "";
     if (typeof val === "string") return val;            // caminho já existente
-    if (val.dataBase64) {
-      imgCounter += 1;
-      const ext = extFromUpload(val);
-      const repoPath = "src/uploads/exposicoes/" + slug + "/" + prefix + "-" + Date.now() + "-" + imgCounter + "." + ext;
-      files.push({ path: repoPath, contentBase64: val.dataBase64 });
-      return "/" + repoPath.replace(/^src\//, "");      // caminho público /uploads/...
-    }
-    return "";
+    imgCounter += 1;
+    const ext = extFromUpload(val, "jpg");
+    const repoPath = "src/uploads/exposicoes/" + slug + "/" + prefix + "-" + Date.now() + "-" + imgCounter + "." + ext;
+    const entry = uploadFileEntry(val, repoPath);       // { blobSha } ou { dataBase64 }
+    if (!entry) return "";
+    files.push(entry);
+    return "/" + repoPath.replace(/^src\//, "");        // caminho público /uploads/...
   }
 
   try {

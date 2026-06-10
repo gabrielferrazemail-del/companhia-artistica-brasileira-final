@@ -86,10 +86,13 @@ permalink: /painel/editar/index.html
     <div class="field">
       <label>Capa</label>
       <div class="photo-row">
-        <img id="f-cover-preview" alt="Capa" hidden>
+        <span class="img-frame img-frame--free" data-label="sem corte">
+          <img id="f-cover-preview" alt="Capa" hidden>
+        </span>
         <input id="f-cover" type="file" accept="image/*">
         <button type="button" class="btn-ghost btn-sm" id="f-cover-clear" hidden>Remover capa</button>
       </div>
+      <p class="field-hint">A capa aparece em largura cheia, sem corte (altura acompanha a imagem).</p>
     </div>
 
     <div class="field">
@@ -117,7 +120,7 @@ permalink: /painel/editar/index.html
       <legend>Galeria (fotos)</legend>
       <div id="gallery-list"></div>
       <button type="button" class="btn-ghost btn-sm" id="add-photo">+ Adicionar foto</button>
-      <p class="field-hint">Fotos exibidas na página da exposição. (Vídeos virão depois.)</p>
+      <p class="field-hint">Fotos e GIFs exibidos na página da exposição. Nome, descrição e crédito são opcionais. (Vídeos virão depois.)</p>
     </fieldset>
 
     <div class="form-actions">
@@ -146,7 +149,9 @@ permalink: /painel/editar/index.html
 <template id="tpl-work">
   <div class="work-row">
     <div class="work-img">
-      <img class="w-preview" alt="Obra" hidden>
+      <span class="img-frame img-frame--square" data-label="1:1">
+        <img class="w-preview" alt="Obra" hidden>
+      </span>
       <input type="file" class="w-file" accept="image/*">
     </div>
     <div class="work-fields">
@@ -162,13 +167,15 @@ permalink: /painel/editar/index.html
 <template id="tpl-photo">
   <div class="work-row photo-item">
     <div class="work-img">
-      <img class="ph-preview" alt="Foto" hidden>
+      <span class="img-frame img-frame--square" data-label="1:1">
+        <img class="ph-preview" alt="Foto" hidden>
+      </span>
       <input type="file" class="ph-file" accept="image/*">
     </div>
     <div class="work-fields">
-      <input type="text" class="ph-alt" placeholder="Texto alternativo (descrição da imagem)">
-      <input type="text" class="ph-caption" placeholder="Legenda">
-      <input type="text" class="ph-credit" placeholder="Crédito (fotógrafo)">
+      <input type="text" class="ph-caption" placeholder="Nome da obra">
+      <input type="text" class="ph-alt" placeholder="Descrição">
+      <input type="text" class="ph-credit" placeholder="Crédito">
     </div>
     <button type="button" class="btn-ghost btn-sm ph-remove" aria-label="Remover foto">×</button>
   </div>

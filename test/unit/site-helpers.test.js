@@ -1,6 +1,6 @@
 const { test } = require("node:test");
 const assert = require("node:assert");
-const { clean, extFromUpload } = require("../../netlify/functions/utils/site-helpers");
+const { clean, extFromUpload, isUpload, uploadFileEntry } = require("../../netlify/functions/utils/site-helpers");
 
 test("clean trims a string", () => {
   assert.strictEqual(clean("  hi  "), "hi");
@@ -37,4 +37,37 @@ test("extFromUpload default fallback is png", () => {
 
 test("extFromUpload honors fallback override", () => {
   assert.strictEqual(extFromUpload({ name: "", type: "weird" }, "jpg"), "jpg");
+});
+
+const SHA40 = "a".repeat(40);
+
+test("isUpload detects dataBase64 and blobSha uploads", () => {
+  assert.strictEqual(isUpload({ dataBase64: "QUJD" }), true);
+  assert.strictEqual(isUpload({ blobSha: SHA40 }), true);
+});
+
+test("isUpload is false for strings, null and empty objects", () => {
+  assert.strictEqual(isUpload("/uploads/x.jpg"), false);
+  assert.strictEqual(isUpload(null), false);
+  assert.strictEqual(isUpload({}), false);
+});
+
+test("uploadFileEntry prefers a valid blobSha", () => {
+  assert.deepStrictEqual(
+    uploadFileEntry({ blobSha: SHA40 }, "src/uploads/a.gif"),
+    { path: "src/uploads/a.gif", blobSha: SHA40 }
+  );
+});
+
+test("uploadFileEntry rejects malformed blobSha but accepts dataBase64", () => {
+  assert.deepStrictEqual(
+    uploadFileEntry({ blobSha: "nope", dataBase64: "QUJD" }, "src/uploads/a.jpg"),
+    { path: "src/uploads/a.jpg", contentBase64: "QUJD" }
+  );
+});
+
+test("uploadFileEntry returns null for non-uploads", () => {
+  assert.strictEqual(uploadFileEntry("/uploads/x.jpg", "p"), null);
+  assert.strictEqual(uploadFileEntry(null, "p"), null);
+  assert.strictEqual(uploadFileEntry({}, "p"), null);
 });

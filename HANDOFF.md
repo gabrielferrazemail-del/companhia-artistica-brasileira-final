@@ -272,3 +272,46 @@ participations[]{ artist(slug), works[]{ image, title, technique, dimensions, de
 ### Pendência aberta
 - **Subir a imagem/gif da capa** no painel (hoje a home mostra fundo neutro — sem imagem ainda).
   Painel → Configurações avançadas → "Página inicial (capa)" → upload → Salvar.
+
+## 12. Mudanças da sessão 2026-06-09 (parte 2 — uploads, molduras, lightbox)
+
+### Uploads reconstruídos (corrige: erro com >3 fotos, GIF na capa, foto grande)
+- **Causa raiz** dos erros "Internal Error" ao salvar: todas as imagens iam em **base64 num único
+  POST** → estourava o limite de **6 MB** do body das Netlify Functions (1 foto de celular já
+  passa; GIFs idem). Não havia validação de campos — crédito sempre foi opcional.
+- **Novo fluxo (2 camadas):**
+  1. **Compressão no cliente** (`src/assets/js/upload.js`, `window.coletivoUpload`): canvas
+     redimensiona p/ máx 2000px e re-encoda (jpeg q.85; png mantém png). **GIF/SVG passam intactos.**
+  2. **Upload individual:** ao escolher o arquivo, o cliente chama **`upload-image`** (function
+     nova) que cria um **blob solto no GitHub** (`POST /git/blobs`) e devolve `{ blobSha }`.
+     O save final envia só `{ blobSha, name, type }`; `commitFiles` referencia o sha na árvore →
+     **continua commit único / 1 rebuild**, e a quantidade de fotos é **ilimitada**.
+- **Limite restante:** GIF individual > **~3,5 MB** (binário) ainda não passa (um POST por imagem,
+  teto de 6 MB do gateway). `upload-image` responde 413 com mensagem amigável.
+- **Backend:** `utils/github.js` (`createBlob`, `commitFiles` aceita `{ blobSha }`),
+  `utils/site-helpers.js` (`isUpload`, `uploadFileEntry`; `extFromUpload` consolidado — removidas
+  cópias locais de `save-exposicao`/`save-artista`), e os 4 saves aceitam `{ blobSha | dataBase64 }`.
+- **Frontend:** `painel-editar.js`, `painel-configuracoes.js`, `painel-editar-artista.js`,
+  `minha-conta.js` fazem upload imediato no `change` (status "Enviando imagem…", botão Salvar
+  desabilitado enquanto envia, erro junto ao status). `base.njk` injeta `upload.js` nessas 4 páginas.
+
+### UI
+- **Bolas coloridas removidas** do herói (layout normal): markup `.blobs` fora do `exposicao.njk`
+  e CSS `.blob*`/`@keyframes float` removidos do `styles.css`.
+- **Molduras de definição** (`.img-frame` + variantes em `styles.css`): preview com a proporção e
+  o corte REAIS em todo upload — galeria/obras/foto de artista/perfil **1:1** (cover), capa da home
+  **16:9** ("tela cheia"), OG **1200×630**, capa de exposição e logo **sem corte** (contain).
+  Aplicado em `painel-editar.njk`, `painel-configuracoes.njk`, `painel-editar-artista.njk`,
+  `minha-conta.njk`.
+- **Campos da foto de galeria** (tpl-photo): "Nome da obra" (`caption`), "Descrição" (`alt`),
+  "Crédito" (`credit` — sem "(fotógrafo)"). Todos opcionais; chaves de dados não mudaram.
+- **Lightbox novo** (`main.js` + classes `.lightbox*` no CSS): foto ampliada mostra **nome,
+  descrição e crédito** (data-attrs em `partials/gallery.njk` e nos tiles de obras do
+  `artista.njk`); fecha por clique ou **Esc**; trava o scroll do body.
+
+### Testes
+- Unit: **22** (`npm test`) — novos: `createBlob`, `commitFiles` com `blobSha` (fetch mockado),
+  `isUpload`/`uploadFileEntry`.
+- E2E: **10** (`npm run test:e2e`) — novo `test/e2e/galeria.spec.js`: sem `.blob` na exposição,
+  lightbox abre com legenda/“Crédito:” e fecha no Esc, tpl-photo usa "Crédito" sem `required`.
+- Build limpo (33 páginas).

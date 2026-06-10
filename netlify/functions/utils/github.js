@@ -98,8 +98,16 @@ async function deleteFile(path, message) {
   return { ok: true };
 }
 
-// ---- Git Data API: commit único com vários arquivos ----
-// files: [{ path, content?:string(utf8), contentBase64?:string }]
+// ---- Git Data API ----
+// Cria um blob solto (sem commit). Usado pelo upload-image: o blob só entra
+// no repositório quando um save posterior referencia o sha em commitFiles.
+async function createBlob(contentBase64) {
+  const blob = await gh("POST", "/git/blobs", { content: contentBase64, encoding: "base64" });
+  return blob.sha;
+}
+
+// Commit único com vários arquivos.
+// files: [{ path, content?:string(utf8), contentBase64?:string, blobSha?:string }]
 async function commitFiles(files, message) {
   const ref = await gh("GET", "/git/ref/heads/" + encodeURIComponent(BRANCH));
   if (ref._notFound) throw new Error("branch não encontrado: " + BRANCH);
@@ -110,9 +118,10 @@ async function commitFiles(files, message) {
   const tree = [];
   for (const f of files) {
     let blobSha;
-    if (f.contentBase64 != null) {
-      const blob = await gh("POST", "/git/blobs", { content: f.contentBase64, encoding: "base64" });
-      blobSha = blob.sha;
+    if (f.blobSha) {
+      blobSha = f.blobSha; // blob já criado via upload-image
+    } else if (f.contentBase64 != null) {
+      blobSha = await createBlob(f.contentBase64);
     } else {
       const blob = await gh("POST", "/git/blobs", { content: f.content || "", encoding: "utf-8" });
       blobSha = blob.sha;
@@ -137,6 +146,6 @@ function text(statusCode, msg) {
 module.exports = {
   REPO, BRANCH, configured, matter,
   getUser, isAdmin, artistSlugForUser,
-  getFile, readFile, listDir, deleteFile, commitFiles,
+  getFile, readFile, listDir, deleteFile, commitFiles, createBlob,
   json, text,
 };

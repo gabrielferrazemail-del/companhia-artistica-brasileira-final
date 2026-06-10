@@ -35,3 +35,56 @@ test("isAdmin is false when the email is not listed", () => {
 test("isAdmin is false when ADMIN_EMAILS is unset and no role", () => {
   assert.strictEqual(gh.isAdmin({ email: "someone@x.com" }), false);
 });
+
+// ---- Git Data API (fetch mockado) ----
+const SHA40 = "f".repeat(40);
+
+function mockFetch(calls) {
+  return async (url, opts) => {
+    const call = { url: String(url), method: opts.method, body: opts.body ? JSON.parse(opts.body) : null };
+    calls.push(call);
+    const ok = (json) => ({ ok: true, status: 200, json: async () => json, text: async () => "" });
+    if (call.url.includes("/git/ref/heads/")) return ok({ object: { sha: "headsha" } });
+    if (call.method === "GET" && call.url.includes("/git/commits/")) return ok({ tree: { sha: "basetree" } });
+    if (call.url.endsWith("/git/blobs")) return ok({ sha: "createdblobsha" });
+    if (call.url.endsWith("/git/trees")) return ok({ sha: "newtreesha" });
+    if (call.url.endsWith("/git/commits")) return ok({ sha: "newcommitsha" });
+    if (call.url.includes("/git/refs/heads/")) return ok({});
+    return ok({});
+  };
+}
+
+test("createBlob posts base64 content and returns the sha", async () => {
+  const calls = [];
+  const realFetch = global.fetch;
+  global.fetch = mockFetch(calls);
+  try {
+    const sha = await gh.createBlob("QUJD");
+    assert.strictEqual(sha, "createdblobsha");
+    const post = calls.find((c) => c.url.endsWith("/git/blobs"));
+    assert.deepStrictEqual(post.body, { content: "QUJD", encoding: "base64" });
+  } finally {
+    global.fetch = realFetch;
+  }
+});
+
+test("commitFiles reuses blobSha entries without creating new blobs", async () => {
+  const calls = [];
+  const realFetch = global.fetch;
+  global.fetch = mockFetch(calls);
+  try {
+    const sha = await gh.commitFiles([
+      { path: "src/uploads/exposicoes/x/g1.gif", blobSha: SHA40 },
+      { path: "src/_data/site.json", content: "{}" },
+    ], "msg");
+    assert.strictEqual(sha, "newcommitsha");
+    // só o arquivo inline cria blob; o gif reusa o sha do upload-image
+    const blobPosts = calls.filter((c) => c.method === "POST" && c.url.endsWith("/git/blobs"));
+    assert.strictEqual(blobPosts.length, 1);
+    const treePost = calls.find((c) => c.url.endsWith("/git/trees"));
+    const gifEntry = treePost.body.tree.find((t) => t.path === "src/uploads/exposicoes/x/g1.gif");
+    assert.strictEqual(gifEntry.sha, SHA40);
+  } finally {
+    global.fetch = realFetch;
+  }
+});

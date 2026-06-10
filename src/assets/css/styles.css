@@ -212,24 +212,6 @@ img { max-width: 100%; display: block; }
   opacity: .4;
 }
 
-/* ========== Blobs ========== */
-.blobs {
-  position: absolute;
-  top: clamp(-4px, 1vw, 16px);
-  right: clamp(-44px, -1vw, 28px);
-  z-index: 1;
-  width: clamp(150px, 22vw, 280px);
-  height: clamp(150px, 22vw, 280px);
-}
-.blob {
-  position: absolute;
-  border-radius: 50%;
-  mix-blend-mode: multiply;
-}
-.blob.g { width: 62%; height: 62%; background: var(--green); top: 0; left: 6%; }
-.blob.m { width: 62%; height: 62%; background: var(--magenta); top: 18%; right: 0; }
-.blob.c { width: 62%; height: 62%; background: var(--cyan); bottom: 0; left: 24%; }
-
 /* ========== Capa / cover image ========== */
 .capa {
   padding: 0 clamp(20px, 5vw, 56px);
@@ -739,12 +721,8 @@ img { max-width: 100%; display: block; }
     transform: translateY(20px);
     animation: rise .85s cubic-bezier(.2, .7, .2, 1) var(--d, 0s) forwards;
   }
-  .blob { animation: float 10s ease-in-out infinite; }
-  .blob.m { animation-duration: 12.5s; }
-  .blob.c { animation-duration: 15s; }
 }
 @keyframes rise { to { opacity: 1; transform: none; } }
-@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
 
 /* ========== Auth: botões auxiliares ========== */
 .nav-auth { /* herda .nav-links a */ }
@@ -825,13 +803,43 @@ img { max-width: 100%; display: block; }
 .field-hint { font-size: 13px; color: var(--text-soft); }
 
 .photo-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-#f-photo-preview {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border: 1px solid var(--line);
+
+/* ========== Moldura de definição (previews de upload) ==========
+   Reproduz a área/corte exata em que a imagem aparece no site
+   (mesma proporção + object-fit do render público). */
+.img-frame {
+  position: relative;
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  flex: none;
+  border: 1.5px dashed var(--text-soft);
   border-radius: var(--radius);
+  background: repeating-linear-gradient(45deg, rgba(0, 0, 0, .05) 0 8px, transparent 8px 16px);
+  overflow: hidden;
 }
+.img-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-frame::after {
+  content: attr(data-label);
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: rgba(250, 249, 246, .85);
+  color: var(--text-soft);
+  pointer-events: none;
+}
+/* Proporções espelhando o site */
+.img-frame--square { aspect-ratio: 1 / 1; width: 140px; }     /* galeria, obras, fotos de perfil */
+.img-frame--hero   { aspect-ratio: 16 / 9; width: 300px; }    /* capa da home (tela cheia, cover) */
+.img-frame--og     { aspect-ratio: 1200 / 630; width: 300px; }/* imagem OG */
+.img-frame--free   { aspect-ratio: 16 / 10; width: 300px; }   /* capa de exposição (sem corte) */
+.img-frame--logo   { aspect-ratio: 3 / 1; width: 220px; }     /* logo (sem corte) */
+.img-frame--free img, .img-frame--logo img { object-fit: contain; }
 
 #links-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
 .link-row { display: grid; grid-template-columns: 1fr 1.4fr auto; gap: 8px; align-items: center; }
@@ -945,8 +953,6 @@ img { max-width: 100%; display: block; }
 }
 .field select:focus { outline: none; border-color: var(--text); }
 
-#f-cover-preview { width: 140px; height: 90px; object-fit: cover; border: 1px solid var(--line); border-radius: var(--radius); }
-
 .chips { display: flex; flex-wrap: wrap; gap: 8px; max-height: 200px; overflow-y: auto; padding: 4px; }
 .chip {
   display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px;
@@ -967,7 +973,7 @@ img { max-width: 100%; display: block; }
   padding: 10px; background: var(--bg-2); border-radius: var(--radius);
 }
 .work-img { display: flex; flex-direction: column; gap: 6px; }
-.w-preview, .ph-preview { width: 90px; height: 90px; object-fit: cover; border: 1px solid var(--line); border-radius: var(--radius); }
+.work-img .img-frame { width: 90px; }
 .w-file, .ph-file { font-size: 11px; width: 90px; }
 .work-fields { display: flex; flex-direction: column; gap: 6px; }
 .work-fields input, .work-fields textarea {
@@ -975,4 +981,30 @@ img { max-width: 100%; display: block; }
   border: 1px solid var(--line); border-radius: var(--radius); font-family: var(--font-body); font-size: 14px;
 }
 .work-fields textarea { resize: vertical; }
-@media (max-width: 520px) { .work-row { grid-template-columns: 1fr; } .w-preview, .w-file { width: 100%; } }
+@media (max-width: 520px) { .work-row { grid-template-columns: 1fr; } .work-img .img-frame, .w-file { width: 100%; } }
+
+/* ---- Lightbox (foto ampliada com nome/descrição/crédito) ---- */
+.lightbox {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0, 0, 0, .92);
+  display: flex; align-items: center; justify-content: center;
+  cursor: zoom-out; padding: 24px;
+}
+.lightbox-figure {
+  margin: 0; max-width: min(1100px, 94vw); max-height: 94vh;
+  display: flex; flex-direction: column; align-items: center; gap: 14px;
+}
+.lightbox-img {
+  max-width: 100%; max-height: calc(94vh - 110px);
+  width: auto; height: auto; object-fit: contain; display: block;
+}
+.lightbox-info {
+  color: #fff; text-align: center; max-width: 70ch;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.lightbox-caption { font-size: 17px; letter-spacing: .01em; }
+.lightbox-desc { margin: 0; font-size: 14px; color: rgba(255, 255, 255, .85); }
+.lightbox-credit {
+  margin: 0; font-family: var(--font-mono); font-size: 11px;
+  text-transform: uppercase; letter-spacing: .12em; color: rgba(255, 255, 255, .6);
+}

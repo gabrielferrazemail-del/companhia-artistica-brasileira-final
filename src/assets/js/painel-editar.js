@@ -26,7 +26,7 @@
     artists: [],
     original: null,     // dados originais (para preservar works/galerias)
     slug: new URLSearchParams(location.search).get("slug") || "",
-    cover: "",          // string (caminho) ou {dataBase64,name,type}
+    cover: "",          // string (caminho) ou {blobSha,name,type}
   };
 
   function showOnly(node) {
@@ -35,13 +35,25 @@
   }
   function toDateInput(v) { return v ? String(v).slice(0, 10) : ""; }
 
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => { const s = String(r.result); const c = s.indexOf(","); resolve(c >= 0 ? s.slice(c + 1) : s); };
-      r.onerror = reject;
-      r.readAsDataURL(file);
-    });
+  // ---- uploads (window.coletivoUpload: comprime e envia 1 imagem por request) ----
+  let uploadsPending = 0;
+  async function handleUpload(inputEl, previewEl, assign) {
+    const f = inputEl.files && inputEl.files[0];
+    if (!f) return;
+    uploadsPending += 1;
+    els.saveBtn.disabled = true;
+    els.status.textContent = "Enviando imagem…";
+    try {
+      assign(await window.coletivoUpload.uploadImage(f));
+      previewEl.src = URL.createObjectURL(f); previewEl.hidden = false;
+      if (els.status.textContent === "Enviando imagem…") els.status.textContent = "";
+    } catch (err) {
+      inputEl.value = "";
+      els.status.textContent = "Erro no upload: " + (err.message || "");
+    } finally {
+      uploadsPending -= 1;
+      if (!uploadsPending) els.saveBtn.disabled = false;
+    }
   }
 
   // ---- artistas (para selects e curadoria) ----
@@ -65,17 +77,14 @@
   function addPhoto(photoData) {
     photoData = photoData || {};
     const node = els.tplPhoto.content.firstElementChild.cloneNode(true);
-    node._image = photoData.image || "";   // string (caminho) ou {dataBase64,...}
+    node._image = photoData.image || "";   // string (caminho) ou {blobSha,...}
     node.querySelector(".ph-alt").value = photoData.alt || "";
     node.querySelector(".ph-caption").value = photoData.caption || "";
     node.querySelector(".ph-credit").value = photoData.credit || "";
     const preview = node.querySelector(".ph-preview");
     if (typeof node._image === "string" && node._image) { preview.src = node._image; preview.hidden = false; }
-    node.querySelector(".ph-file").addEventListener("change", async (e) => {
-      const f = e.target.files && e.target.files[0];
-      if (!f) return;
-      node._image = { dataBase64: await readFileAsBase64(f), name: f.name, type: f.type };
-      preview.src = URL.createObjectURL(f); preview.hidden = false;
+    node.querySelector(".ph-file").addEventListener("change", (e) => {
+      handleUpload(e.target, preview, (v) => { node._image = v; });
     });
     node.querySelector(".ph-remove").addEventListener("click", () => node.remove());
     els.galleryList.appendChild(node);
@@ -85,18 +94,15 @@
   function addWork(listEl, workData) {
     workData = workData || {};
     const node = els.tplWork.content.firstElementChild.cloneNode(true);
-    node._image = workData.image || "";   // string (caminho) ou {dataBase64,...}
+    node._image = workData.image || "";   // string (caminho) ou {blobSha,...}
     node.querySelector(".w-title").value = workData.title || "";
     node.querySelector(".w-technique").value = workData.technique || "";
     node.querySelector(".w-dimensions").value = workData.dimensions || "";
     node.querySelector(".w-description").value = workData.description || "";
     const preview = node.querySelector(".w-preview");
     if (typeof node._image === "string" && node._image) { preview.src = node._image; preview.hidden = false; }
-    node.querySelector(".w-file").addEventListener("change", async (e) => {
-      const f = e.target.files && e.target.files[0];
-      if (!f) return;
-      node._image = { dataBase64: await readFileAsBase64(f), name: f.name, type: f.type };
-      preview.src = URL.createObjectURL(f); preview.hidden = false;
+    node.querySelector(".w-file").addEventListener("change", (e) => {
+      handleUpload(e.target, preview, (v) => { node._image = v; });
     });
     node.querySelector(".w-remove").addEventListener("click", () => node.remove());
     listEl.appendChild(node);
@@ -191,6 +197,7 @@
 
   async function onSubmit(e) {
     e.preventDefault();
+    if (uploadsPending) { els.status.textContent = "Aguarde o envio das imagens…"; return; }
     if (!els.fTitle.value.trim()) { els.fTitle.focus(); return; }
     if (!/^[a-z0-9-]+$/.test(els.fSlug.value.trim().toLowerCase())) {
       els.status.textContent = "Slug inválido: use só letras minúsculas, números e hífens."; els.fSlug.focus(); return;
@@ -214,11 +221,8 @@
     els.addArtist.addEventListener("click", () => addParticipation(els.artistsList, null));
     els.addPhoto.addEventListener("click", () => addPhoto(null));
     els.form.addEventListener("submit", onSubmit);
-    els.fCover.addEventListener("change", async () => {
-      const f = els.fCover.files && els.fCover.files[0];
-      if (!f) return;
-      state.cover = { dataBase64: await readFileAsBase64(f), name: f.name, type: f.type };
-      els.fCoverPreview.src = URL.createObjectURL(f); els.fCoverPreview.hidden = false; els.fCoverClear.hidden = false;
+    els.fCover.addEventListener("change", () => {
+      handleUpload(els.fCover, els.fCoverPreview, (v) => { state.cover = v; els.fCoverClear.hidden = false; });
     });
     els.fCoverClear.addEventListener("click", () => {
       state.cover = ""; els.fCover.value = ""; els.fCoverPreview.hidden = true; els.fCoverClear.hidden = true;

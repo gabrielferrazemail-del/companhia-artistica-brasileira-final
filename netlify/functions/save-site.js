@@ -1,8 +1,8 @@
 // POST /.netlify/functions/save-site  (admin) — grava src/_data/site.json (commit único)
 // Body: { name, tagline, about, logo, contact{email,whatsapp}, social[], seo{...} }
-// logo e seo.shareImage: string (caminho) ou { dataBase64, name, type } (upload novo).
+// Campos de imagem: string (caminho) ou { blobSha | dataBase64, name, type } (upload).
 const gh = require("./utils/github");
-const { clean, extFromUpload } = require("./utils/site-helpers");
+const { clean, extFromUpload, uploadFileEntry } = require("./utils/site-helpers");
 
 exports.handler = async (event, context) => {
   if (event.httpMethod !== "POST") return gh.text(405, "Método não permitido.");
@@ -20,14 +20,13 @@ exports.handler = async (event, context) => {
   function resolveImage(val, prefix) {
     if (!val) return "";
     if (typeof val === "string") return val;
-    if (val.dataBase64) {
-      imgN += 1;
-      const ext = extFromUpload(val);
-      const repoPath = "src/uploads/site/" + prefix + "-" + Date.now() + "-" + imgN + "." + ext;
-      files.push({ path: repoPath, contentBase64: val.dataBase64 });
-      return "/" + repoPath.replace(/^src\//, "");
-    }
-    return "";
+    imgN += 1;
+    const ext = extFromUpload(val, "jpg");
+    const repoPath = "src/uploads/site/" + prefix + "-" + Date.now() + "-" + imgN + "." + ext;
+    const entry = uploadFileEntry(val, repoPath);
+    if (!entry) return "";
+    files.push(entry);
+    return "/" + repoPath.replace(/^src\//, "");
   }
 
   try {

@@ -3,7 +3,7 @@
   {% for item in gallery %}
   <figure class="tile" role="listitem">
     {% if item.image %}
-      <img src="{{ item.image }}" alt="{{ item.alt or '' }}" loading="lazy">
+      <img src="{{ item.image }}" alt="{{ item.alt or '' }}" data-caption="{{ item.caption or '' }}" data-desc="{{ item.alt or '' }}" data-credit="{{ item.credit or '' }}" loading="lazy">
     {% else %}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
         <rect x="3" y="3" width="18" height="18" rx="1"/>

@@ -12,17 +12,11 @@
     saveBtn: $("#a-save"), status: $("#ea-status"), tplLink: $("#tpl-link"),
   };
   const state = { slug: new URLSearchParams(location.search).get("slug") || "", photo: "" };
+  let uploadPending = false;
 
   function showOnly(node) {
     [els.guest, els.noadmin, els.error, els.form].forEach((n) => { if (n) n.hidden = true; });
     if (node) node.hidden = false;
-  }
-  function readFileAsBase64(file) {
-    return new Promise((resolve, reject) => {
-      const r = new FileReader();
-      r.onload = () => { const s = String(r.result); const c = s.indexOf(","); resolve(c >= 0 ? s.slice(c + 1) : s); };
-      r.onerror = reject; r.readAsDataURL(file);
-    });
   }
   function addLink(linkData) {
     linkData = linkData || {};
@@ -75,6 +69,7 @@
 
   async function onSubmit(e) {
     e.preventDefault();
+    if (uploadPending) { els.status.textContent = "Aguarde o envio da foto…"; return; }
     if (!els.name.value.trim()) { els.name.focus(); return; }
     if (!/^[a-z0-9-]+$/.test(els.slug.value.trim().toLowerCase())) {
       els.status.textContent = "Slug inválido: só letras minúsculas, números e hífens."; els.slug.focus(); return;
@@ -99,8 +94,18 @@
     els.photo.addEventListener("change", async () => {
       const f = els.photo.files && els.photo.files[0];
       if (!f) return;
-      state.photo = { dataBase64: await readFileAsBase64(f), name: f.name, type: f.type };
-      els.photoPreview.src = URL.createObjectURL(f); els.photoPreview.hidden = false; els.photoClear.hidden = false;
+      uploadPending = true;
+      els.saveBtn.disabled = true; els.status.textContent = "Enviando foto…";
+      try {
+        state.photo = await window.coletivoUpload.uploadImage(f);
+        els.photoPreview.src = URL.createObjectURL(f); els.photoPreview.hidden = false; els.photoClear.hidden = false;
+        els.status.textContent = "";
+      } catch (err) {
+        els.photo.value = "";
+        els.status.textContent = "Erro no upload: " + (err.message || "");
+      }
+      uploadPending = false;
+      els.saveBtn.disabled = false;
     });
     els.photoClear.addEventListener("click", () => {
       state.photo = ""; els.photo.value = ""; els.photoPreview.hidden = true; els.photoClear.hidden = true;
