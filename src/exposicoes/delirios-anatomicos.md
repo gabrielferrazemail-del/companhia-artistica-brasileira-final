@@ -2,11 +2,11 @@
 title: Delírios Anatômicos
 slug: delirios-anatomicos
 status: em-cartaz
-cover: ''
+cover: /uploads/exposicoes/delirios-anatomicos/capa-1781061540400-1.jpg
 summary: >-
   Vários artistas, um só corpo. Cada mão desenha uma parte — o todo só existe no
   encontro.
-start_date: 2026-06-13T00:00:00.000Z
+start_date: '2026-06-13'
 end_date: ''
 location:
   name: Galeria R. Monteiro
@@ -15,7 +15,7 @@ credits:
   curator: Carlos Henrique
   photography: Fellipe Signorelli
 theme: delirios
-influences: >
+influences: >-
   Movimento que inspirou a exposição "Delírios Anatômicos".
 
 
@@ -100,6 +100,7 @@ participations:
     works: []
 order: 1
 ---
+
 O propósito da exposição é refletir que uma unidade não nasce da imposição, mas do coração transformado. Diferentes identidades chamadas a viver em concordância, com um sentimento uníssono, abandonando o orgulho e inclinando-se à humildade, pois a verdadeira comunhão não se sustenta na superioridade de uns sobre outros, mas na disposição sincera de caminhar lado a lado, reconhecendo que todos dependem igualmente da Arte.
 
 Assim, a obra suplica que não haja divisões entre os povos, mas que todos estejam unidos em um mesmo pensamento e propósito. A unidade mostrada em "Delírios Anatômicos" não significa uniformidade de opiniões humanas, mas uma harmonia coletiva, quando diferentes pessoas são conduzidas pelo mesmo amor e propósito.
